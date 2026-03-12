@@ -1,44 +1,77 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, HeartHandshake } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Detect page scroll
+  // Detect scroll position
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > 300);
+
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+      const progress = (scrollTop / docHeight) * 100;
+      setScrollProgress(progress);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent background scroll when menu is open
+  // Prevent background scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
   }, [mobileMenuOpen]);
 
+  // Desktop nav styling
+ const navLinkClass = ({ isActive }) =>
+  `font-medium transition relative ${
+    isActive
+      ? scrolled
+        ? "text-secondary"
+        : "text-white"
+      : scrolled
+      ? "text-gray-700 hover:text-primary"
+      : "text-white hover:text-secondary"
+  }`;
+
+
   return (
     <header>
-      <nav
-        className={`fixed w-full top-0 left-0 z-50 transition-all duration-300 ${scrolled
-          ? " shadow-md "
-          : "bg-transparent"
-          }`}
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center h-20">
+      {/* Scroll Progress Bar */}
+      <div
+        className=" fixed top-0 left-0 h-[3px] bg-secondary z-[100]"
+        style={{ width: `${scrollProgress}%` }}
+      />
 
+    <nav
+  className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${
+    scrolled
+      ? "bg-white/95 backdrop-blur-md shadow-md"
+      : "bg-transparent shadow-none"
+  }`}
+>
+
+        <div className="max-w-7xl mx-auto px-6">
+          <div
+            className={`flex justify-between items-center transition-all duration-300 ${
+              scrolled ? "h-16" : "h-20"
+            }`}
+          >
             {/* Logo */}
-            <div className="relative w-[250px] h-[95px]">
+            <div className="relative w-[230px] h-[85px]">
               <Link to="/" className="block w-full h-full">
                 <img
                   src="/img/shoova_logo.png"
                   alt="Shoova Initiative"
-                  className="absolute inset-0 w-full h-full object-contain"
+                  className="absolute inset-0 w-full h-full object-contain transition"
                 />
               </Link>
             </div>
@@ -46,51 +79,36 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
 
-              <Link
-                className={`font-medium transition ${scrolled ? "text-gray-400 hover:text-primary" : "text-primary hover:text-secondary"
-                  }`}
-                to="/about"
-              >
+              <NavLink to="/about" className={navLinkClass}>
                 About
-              </Link>
+              </NavLink>
 
-              <Link
-                className={`font-medium transition ${scrolled ? "text-gray-400 hover:text-primary" : "text-primary hover:text-secondary"
-                  }`}
-                to="/programs"
-              >
+              <NavLink to="/programs" className={navLinkClass}>
                 Programs
-              </Link>
+              </NavLink>
 
-              <Link
-                className={`font-medium transition ${scrolled ? "text-gray-400 hover:text-primary" : "text-primary hover:text-secondary"
-                  }`}
-                to="/blog"
-              >
+              <NavLink to="/blog" className={navLinkClass}>
                 Stories
-              </Link>
+              </NavLink>
 
-              <Link
-                className={`font-medium transition ${scrolled ? "text-gray-400 hover:text-primary" : "text-primary hover:text-secondary"
-                  }`}
-                to="/contact"
-              >
+              <NavLink to="/contact" className={navLinkClass}>
                 Contact
-              </Link>
+              </NavLink>
 
               <Link
-                className="bg-secondary hover:bg-[#B85D2F] text-white px-6 py-2.5 rounded-full font-semibold transition shadow-sm"
                 to="/donate"
+                className="bg-secondary hover:bg-[#B85D2F] text-white px-6 py-2.5 rounded-full font-semibold transition shadow-sm"
               >
-                Donate Now
+                Join the Restoration
               </Link>
 
             </div>
 
             {/* Mobile Button */}
             <button
-              className={`md:hidden transition ${scrolled ? "text-text" : "text-text"
-                }`}
+              className={`md:hidden transition ${
+                scrolled ? "text-gray-800" : "text-white"
+              }`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -99,7 +117,6 @@ const Navbar = () => {
                 <Menu className="w-8 h-8" />
               )}
             </button>
-
           </div>
         </div>
       </nav>
@@ -107,55 +124,73 @@ const Navbar = () => {
       {/* Mobile Overlay */}
       <div
         onClick={() => setMobileMenuOpen(false)}
-        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${
+          mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
       />
 
       {/* Mobile Slide Menu */}
       <div
-        className={`fixed top-0 right-0 h-screen w-72 bg-white z-50 shadow-xl transform transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed top-0 right-0 h-screen w-72 bg-white z-50 shadow-xl transform transition-transform duration-300 ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex flex-col p-8 space-y-8 text-lg font-medium">
 
-          <Link
+          <NavLink
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:text-primary transition"
             to="/about"
+            className={({ isActive }) =>
+              isActive
+                ? "text-secondary font-semibold"
+                : "hover:text-primary transition"
+            }
           >
             About
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:text-primary transition"
             to="/programs"
+            className={({ isActive }) =>
+              isActive
+                ? "text-secondary font-semibold"
+                : "hover:text-primary transition"
+            }
           >
             Programs
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:text-primary transition"
             to="/blog"
+            className={({ isActive }) =>
+              isActive
+                ? "text-secondary font-semibold"
+                : "hover:text-primary transition"
+            }
           >
             Stories
-          </Link>
+          </NavLink>
 
-          <Link
+          <NavLink
             onClick={() => setMobileMenuOpen(false)}
-            className="hover:text-primary transition"
             to="/contact"
+            className={({ isActive }) =>
+              isActive
+                ? "text-secondary font-semibold"
+                : "hover:text-primary transition"
+            }
           >
             Contact
-          </Link>
+          </NavLink>
 
           <Link
             onClick={() => setMobileMenuOpen(false)}
-            className="mt-6 bg-secondary hover:bg-secondaryHover text-white py-3 rounded-full text-center font-semibold transition"
             to="/donate"
+            className="mt-6 bg-secondary hover:bg-[#B85D2F] text-white py-3 rounded-full text-center font-semibold transition"
           >
-            Donate Now
+            Join the Restoration
           </Link>
 
         </div>

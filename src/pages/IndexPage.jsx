@@ -1,17 +1,20 @@
-import React , { useState }from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from '../components/Badge';
-import { Facebook } from 'lucide-react';
 import { Heart } from 'lucide-react';
 import { Image } from '../components/Image';
-import { Instagram } from 'lucide-react';
 import { Link } from '../components/Link';
 import { MapPin } from 'lucide-react';
 import { Menu } from 'lucide-react';
 import { Text } from '../components/Text';
-import { Twitter } from 'lucide-react';
-import { Youtube } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Share2 } from "lucide-react";
 import { motion } from "framer-motion"
+
+
 
 
 export const IndexPage = ({ className, children, variant, contentKey, ...props }) => {
@@ -58,16 +61,17 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
         {/* Hero Section */}
         <section
           id="hero"
-          className="relative h-screen w-full flex items-center justify-center text-center overflow-hidden"
+          className="relative h-screen  w-full flex items-center justify-center text-center overflow-hidden"
         >
           {/* Background Video */}
           <div className="absolute inset-0">
             <video
               autoPlay
+              scale-110
               muted
               loop
               playsInline
-              className="w-full h-full object-cover scale-105"
+              className="w-full h-full transition-transform duration-[8000ms] object-cover scale-105"
             >
               <source src="/img/planting.mp4" type="video/mp4" />
             </video>
@@ -81,10 +85,10 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
           {/* Content */}
           <div className="relative z-10 max-w-4xl px-6 text-white">
-            <Badge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md text-white font-medium text-sm mb-6 border border-white/20">
+            {/* <Badge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md text-white font-medium text-sm mb-6 border border-white/20">
               <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
               Over 50,000 lives impacted this year
-            </Badge>
+            </Badge> */}
 
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
@@ -106,7 +110,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                 to="/donate"
                 className="px-8 py-4 bg-secondary hover:bg-secondaryHover text-white font-bold rounded-full text-lg transition shadow-xl"
               >
-                Make a Donation
+                Join the Restoration
               </Link>
 
               <Link
@@ -118,6 +122,9 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
               </Link>
             </div>
           </div>
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce">
+  ↓
+</div>
         </section>
         {/* Restoration Process */}
         <section id="restoration_process" className="py-20 bg-white">
@@ -251,8 +258,8 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                     key={tab.id}
                     onClick={() => setActiveImpact(tab)}
                     className={`px-5 py-2.5 rounded-full text-sm md:text-base font-semibold transition-all duration-300 border ${isActive
-                        ? "bg-secondary text-white border-secondary shadow-md"
-                        : "bg-white text-textDark border-gray-300 hover:bg-white/70"
+                      ? "bg-secondary text-white border-secondary shadow-md"
+                      : "bg-white text-textDark border-gray-300 hover:bg-white/70"
                       }`}
                   >
                     {tab.label}
@@ -309,248 +316,704 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
         </section>
 
 
-      {/* Impact Metrics */}
-<section id="impact_metrics" className="py-24 bg-background">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="text-center mb-16">
-      <Text className="text-secondary font-bold tracking-wider uppercase text-sm">
-        Measuring Restoration
-      </Text>
-      <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mt-2 mb-6">
-        Impact You Can Measure
-      </h2>
-      <p className="text-xl text-text max-w-3xl mx-auto">
-        Restoration is more than a vision — it is measurable change. Shoova
-        Initiative tracks the healing of land, water, and livelihoods to ensure
-        every effort creates lasting transformation.
-      </p>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {/* Metric 1 */}
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-        <div className="relative h-64 overflow-hidden">
-          <img
-            src="/img/lands.jpg"
-            alt="Restored land and environmental recovery"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
-            LAND
-          </div>
-        </div>
-        <div className="p-8">
-          <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-            Acres of Land Restored
-          </h3>
-          <p className="text-text mb-6">
-            Tracking the physical recovery of landscapes damaged by illegal
-            mining, from degraded soil to restored ecosystems capable of
-            supporting life again.
-          </p>
-        </div>
-      </div>
-
-      {/* Metric 2 */}
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-        <div className="relative h-64 overflow-hidden">
-          <img
-            src="/img/waters.jpg"
-            alt="River health and water quality monitoring"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-secondary">
-            WATER
-          </div>
-        </div>
-        <div className="p-8">
-          <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-            River Quality Index
-          </h3>
-          <p className="text-text mb-6">
-            Monitoring improvements in water health, including the reduction of
-            mercury, silt, and other pollutants affecting rivers and nearby
-            communities.
-          </p>
-        </div>
-      </div>
-
-      {/* Metric 3 */}
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-        <div className="relative h-64 overflow-hidden">
-          <img
-            src="/img/repair.jpg"
-            alt="Youth training and dignified livelihoods"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
-            LIVELIHOODS
-          </div>
-        </div>
-        <div className="p-8">
-          <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-            Dignified Livelihoods
-          </h3>
-          <p className="text-text mb-6">
-            Measuring how many young people transition from dangerous mining
-            work into skilled, sustainable, and dignified careers that rebuild
-            both lives and communities.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="text-center mt-12">
-      <Link
-        to="/programs"
-        className="inline-block px-8 py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-colors"
-      >
-        Explore Our Impact
-      </Link>
-    </div>
-  </div>
-</section>
-
-        {/* Communities We Serve */}
-        <section id="communities_we_serve" className="py-24 bg-primary text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6"> Communities We Serve </h2>
-                <p className="text-teal-100 text-lg mb-8 leading-relaxed">
-                  We work hand-in-hand with local leaders to identify the most vulnerable populations. Our approach is community-led and sustainable.
-                </p>
-                <ul className="space-y-4">
-                  <li className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><MapPin className="w-5 h-5 text-accent" /></div>
-                    <Text className="text-xl font-medium"> Rural Villages in Sub-Saharan Africa </Text>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><MapPin className="w-5 h-5 text-accent" /></div>
-                    <Text className="text-xl font-medium"> Urban Slums in Southeast Asia </Text>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><MapPin className="w-5 h-5 text-accent" /></div>
-                    <Text className="text-xl font-medium"> Indigenous Communities in South America </Text>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"><MapPin className="w-5 h-5 text-accent" /></div>
-                    <Text className="text-xl font-medium"> Refugee Settlements Worldwide </Text>
-                  </li>
-                </ul>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <img alt="Community 1" src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=600&auto=format&fit=crop" className="rounded-2xl shadow-lg transform translate-y-8" />
-                <img alt="Community 2" src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=600&auto=format&fit=crop" className="rounded-2xl shadow-lg" />
-                <img alt="Community 3" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=600&auto=format&fit=crop" className="rounded-2xl shadow-lg transform translate-y-8" />
-                <img alt="Community 4" src="https://images.unsplash.com/photo-1542345812-d98b5cd6cf98?auto=format&fit=crop&w=600&q=80" className="rounded-2xl shadow-lg" />
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Our Path To Impact */}
-        <section id="our_path_to_impact" className="py-24 bg-white">
+        {/* Impact Metrics */}
+        <section id="impact_metrics" className="py-24 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Text variant="bold" className="text-secondary font-bold tracking-wider uppercase text-sm"> How We Work </Text>
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mt-2 mb-6"> Our Path to Impact </h2>
-            </div>
-            <div className="relative">
-              <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 z-0"></div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
-                {/* Step 1 */}
-                <div className="bg-white p-6 text-center">
-                  <div className="w-16 h-16 mx-auto bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg border-4 border-white"> 1 </div>
-                  <h3 className="text-xl font-bold text-textDark mb-2"> Listen </h3>
-                  <p className="text-text text-sm">
-                    We start by listening to the community's needs and aspirations.
-                  </p>
-                </div>
-                {/* Step 2 */}
-                <div className="bg-white p-6 text-center">
-                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg"> 2 </div>
-                  <h3 className="text-xl font-bold text-textDark mb-2"> Plan </h3>
-                  <p className="text-text text-sm">
-                    We co-create sustainable solutions with local stakeholders.
-                  </p>
-                </div>
-                {/* Step 3 */}
-                <div className="bg-white p-6 text-center">
-                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg"> 3 </div>
-                  <h3 className="text-xl font-bold text-textDark mb-2"> Act </h3>
-                  <p className="text-text text-sm"> We implement projects with transparency and efficiency. </p>
-                </div>
-                {/* Step 4 */}
-                <div className="bg-white p-6 text-center">
-                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg"> 4 </div>
-                  <h3 className="text-xl font-bold text-textDark mb-2"> Empower </h3>
-                  <p className="text-text text-sm">
-                    We train locals to maintain projects, ensuring long-term success.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Your Gift Changes Lives */}
-        <section id="your_gift_changes_lives" className="py-24 bg-accent/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mb-6"> Your Gift Changes Lives </h2>
-              <p className="text-xl text-text max-w-2xl mx-auto">
-                Choose a monthly donation amount to make a sustained impact.
+              <Text className="text-secondary font-bold tracking-wider uppercase text-sm">
+                Measuring Restoration
+              </Text>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mt-2 mb-6">
+                Impact You Can Measure
+              </h2>
+              <p className="text-xl text-text max-w-3xl mx-auto">
+                Restoration is more than a vision — it is measurable change. Shoova
+                Initiative tracks the healing of land, water, and livelihoods to ensure
+                every effort creates lasting transformation.
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Tier 1 */}
-              <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 text-center">
-                <h3 className="text-2xl font-bold text-textDark mb-2"> Friend </h3>
-                <div className="text-4xl font-bold text-primary mb-4">
-                  $25
-                  <Text className="text-lg text-gray-400 font-normal"> /mo </Text>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Metric 1 */}
+              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src="/img/lands.jpg"
+                    alt="Restored land and environmental recovery"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
+                    LAND
+                  </div>
                 </div>
-                <p className="text-text mb-8"> Provides school supplies for 5 children every month. </p>
-                <Link contentKey="cta_53" className="block w-full py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-colors" href="donate.html"> Select </Link>
+                <div className="p-8">
+                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+                    Acres of Land Restored
+                  </h3>
+                  <p className="text-text mb-6">
+                    Tracking the physical recovery of landscapes damaged by illegal
+                    mining, from degraded soil to restored ecosystems capable of
+                    supporting life again.
+                  </p>
+                </div>
               </div>
-              {/* Tier 2 */}
-              <div className="bg-white p-8 rounded-2xl shadow-xl border-2 border-secondary text-center transform md:-translate-y-4 relative">
-                <Badge className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary text-white px-4 py-1 rounded-full text-sm font-bold"> MOST POPULAR </Badge>
-                <h3 className="text-2xl font-bold text-textDark mb-2"> Guardian </h3>
-                <div className="text-4xl font-bold text-secondary mb-4">
-                  $50
-                  <Text className="text-lg text-gray-400 font-normal"> /mo </Text>
+
+              {/* Metric 2 */}
+              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src="/img/waters.jpg"
+                    alt="River health and water quality monitoring"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-secondary">
+                    WATER
+                  </div>
                 </div>
-                <p className="text-text mb-8"> Provides clean water for a family of 4 for a year. </p>
-                <Link contentKey="cta_54" className="block w-full py-3 bg-secondary text-white font-bold rounded-full hover:bg-secondaryHover transition-colors shadow-lg shadow-secondary/20" href="donate.html"> Select </Link>
+                <div className="p-8">
+                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+                    River Quality Index
+                  </h3>
+                  <p className="text-text mb-6">
+                    Monitoring improvements in water health, including the reduction of
+                    mercury, silt, and other pollutants affecting rivers and nearby
+                    communities.
+                  </p>
+                </div>
               </div>
-              {/* Tier 3 */}
-              <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 text-center">
-                <h3 className="text-2xl font-bold text-textDark mb-2"> Champion </h3>
-                <div className="text-4xl font-bold text-primary mb-4">
-                  $100
-                  <Text className="text-lg text-gray-400 font-normal"> /mo </Text>
+
+              {/* Metric 3 */}
+              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src="/img/repair.jpg"
+                    alt="Youth training and dignified livelihoods"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
+                    LIVELIHOODS
+                  </div>
                 </div>
-                <p className="text-text mb-8"> Funds a mobile clinic visit for an entire village. </p>
-                <Link contentKey="cta_55" className="block w-full py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-colors" href="donate.html"> Select </Link>
+                <div className="p-8">
+                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+                    Dignified Livelihoods
+                  </h3>
+                  <p className="text-text mb-6">
+                    Measuring how many young people transition from dangerous mining
+                    work into skilled, sustainable, and dignified careers that rebuild
+                    both lives and communities.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                to="/programs"
+                className="inline-block px-8 py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-colors"
+              >
+                Explore Our Impact
+              </Link>
+            </div>
+          </div>
+        </section>
+        {/* Meet the People Behind the Restoration */}
+        <section id="meet_the_team" className="py-24 bg-primary text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+              {/* Left Content */}
+              <div>
+                <p className="text-secondary font-bold tracking-wider uppercase text-sm mb-4">
+                  Leadership & Trust
+                </p>
+
+                <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 leading-tight">
+                  Meet the People Behind the Restoration
+                </h2>
+
+                <p className="text-teal-100 text-lg mb-8 leading-relaxed max-w-xl">
+                  Shoova Initiative is led by a coalition of project managers, data
+                  scientists, engineers, and community leaders united by one mission:
+                  to restore land, rebuild livelihoods, and equip the next generation
+                  of technical leaders in Ghana’s Eastern Region.
+                </p>
+
+                <ul className="space-y-4">
+                  <li className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-accent" />
+                    </div>
+                    <Text className="text-xl font-medium">
+                      Minnesota-based leadership and governance
+                    </Text>
+                  </li>
+
+                  <li className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-accent" />
+                    </div>
+                    <Text className="text-xl font-medium">
+                      Ghana-rooted operations and partnerships
+                    </Text>
+                  </li>
+
+                  <li className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-accent" />
+                    </div>
+                    <Text className="text-xl font-medium">
+                      Financial stewardship and accountability
+                    </Text>
+                  </li>
+
+                  <li className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-accent" />
+                    </div>
+                    <Text className="text-xl font-medium">
+                      Technical, legal, and community expertise
+                    </Text>
+                  </li>
+                </ul>
+
+                <Link
+                  to="/about"
+                  className="inline-block mt-8 px-7 py-3 border border-white/40 rounded-full font-semibold hover:bg-white hover:text-primary transition"
+                >
+                  Meet the Full Team
+                </Link>
+              </div>
+
+              {/* Right Portrait Grid */}
+              <div className="grid grid-cols-2 gap-6">
+
+                {/* Member 1 */}
+                <div className="group relative transform translate-y-8">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img
+                      src="/img/willie.jpg"
+                      alt="William Agyekum"
+                      className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Expanding Social Rail */}
+                    {/* Expanding Social Rail */}
+                    <div className="absolute left-0 bottom-0 group/social">
+                      <div className="bg-secondary w-12 h-12 group-hover:h-48 transition-all duration-500 overflow-hidden flex flex-col items-center">
+
+                        {/* Main Share Icon */}
+                        <div className="w-full h-12 flex items-center justify-center border-b border-white/20">
+                          <Share2 className="w-4 h-4 text-white" />
+                        </div>
+
+                        {/* Hidden Icons */}
+                        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition duration-300 delay-200">
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Facebook className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Twitter className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Instagram className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Youtube className="w-4 h-4 text-white" />
+                          </a>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="text-xl font-heading font-bold">William Agyekum</h3>
+                    <p className="text-sm text-teal-100 mt-1">President &amp; Executive Director</p>
+                    <p className="text-xs text-white/70 mt-1">USA</p>
+                  </div>
+                </div>
+
+                {/* Member 2 */}
+                <div className="group relative">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img
+                      src="/img/salome.jpg"
+                      alt="Salome Agyekum"
+                      className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Expanding Social Rail */}
+                    <div className="absolute left-0 bottom-0 group/social">
+                      <div className="bg-secondary w-12 h-12 group-hover:h-48 transition-all duration-500 overflow-hidden flex flex-col items-center">
+
+                        {/* Main Share Icon */}
+                        <div className="w-full h-12 flex items-center justify-center border-b border-white/20">
+                          <Share2 className="w-4 h-4 text-white" />
+                        </div>
+
+                        {/* Hidden Icons */}
+                        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition duration-300 delay-200">
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Facebook className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Twitter className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Instagram className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Youtube className="w-4 h-4 text-white" />
+                          </a>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="text-xl font-heading font-bold">Salome Agyekum, CA</h3>
+                    <p className="text-sm text-teal-100 mt-1">Treasurer</p>
+                    <p className="text-xs text-white/70 mt-1">USA</p>
+                  </div>
+                </div>
+
+                {/* Member 3 */}
+                <div className="group relative transform translate-y-8">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img
+                      src="/img/opon.jpg"
+                      alt="Kwame Opon-Yeboah"
+                      className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Expanding Social Rail */}
+                    <div className="absolute left-0 bottom-0 group/social">
+                      <div className="bg-secondary w-12 h-12 group-hover:h-48 transition-all duration-500 overflow-hidden flex flex-col items-center">
+
+                        {/* Main Share Icon */}
+                        <div className="w-full h-12 flex items-center justify-center border-b border-white/20">
+                          <Share2 className="w-4 h-4 text-white" />
+                        </div>
+
+                        {/* Hidden Icons */}
+                        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition duration-300 delay-200">
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Facebook className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Twitter className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Instagram className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Youtube className="w-4 h-4 text-white" />
+                          </a>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="text-xl font-heading font-bold">Kwame Opon-Yeboah</h3>
+                    <p className="text-sm text-teal-100 mt-1">Head of Ghana Operations</p>
+                    <p className="text-xs text-white/70 mt-1">Ghana</p>
+                  </div>
+                </div>
+
+                {/* Member 4 */}
+                <div className="group relative">
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img
+                      src="/img/julius.jpeg"
+                      alt="Julius Botchchway"
+                      className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Expanding Social Rail */}
+                    <div className="absolute left-0 bottom-0 group/social">
+                      <div className="bg-secondary w-12 h-12 group-hover:h-48 transition-all duration-500 overflow-hidden flex flex-col items-center">
+
+                        {/* Main Share Icon */}
+                        <div className="w-full h-12 flex items-center justify-center border-b border-white/20">
+                          <Share2 className="w-4 h-4 text-white" />
+                        </div>
+
+                        {/* Hidden Icons */}
+                        <div className="flex flex-col opacity-0 group-hover:opacity-100 transition duration-300 delay-200">
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Facebook className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Twitter className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Instagram className="w-4 h-4 text-white" />
+                          </a>
+
+                          <a href="#" className="w-12 h-12 flex items-center justify-center hover:bg-black/20">
+                            <Youtube className="w-4 h-4 text-white" />
+                          </a>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="text-xl font-heading font-bold">Julius Botchchway</h3>
+                    <p className="text-sm text-teal-100 mt-1">Director of Ghana Operations</p>
+                    <p className="text-xs text-white/70 mt-1">Ghana</p>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
         </section>
-        {/* Be The Change You Wish To See */}
-        <section id="be_the_change_you_wish_to_see" className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary">
-            <Image variant="cover" className="w-full h-full object-cover opacity-20 mix-blend-overlay" src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=2000&auto=format&fit=crop" alt="Background" />
-          </div>
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center text-white">
-            <h2 className="text-5xl md:text-6xl font-heading font-bold mb-8"> Be the Change You Wish to See </h2>
-            <p className="text-xl text-teal-100 mb-12 max-w-2xl mx-auto">
-              Every second counts. Your contribution today can save a life tomorrow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link contentKey="cta_56" className="px-10 py-5 bg-secondary hover:bg-secondaryHover text-white font-bold text-xl rounded-full transition-all shadow-xl transform hover:scale-105" href="donate.html"> Donate Now </Link>
-              <Link contentKey="cta_57" className="px-10 py-5 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white font-bold text-xl rounded-full transition-all" href="contact.html"> Volunteer With Us </Link>
+
+        {/* From Donation to Restoration */}
+        {/* <section id="from_donation_to_restoration" className="py-24 bg-white cursor-default">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <Text className="text-secondary font-bold tracking-wider uppercase text-sm">
+                How Support Creates Change
+              </Text>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mt-2 mb-6">
+                From Donation to Restoration
+              </h2>
+              <p className="text-xl text-text max-w-3xl mx-auto">
+                Every contribution to Shoova Initiative helps transform damaged land,
+                equip young people with skills, and build a future rooted in restoration.
+              </p>
             </div>
+
+            <div className="relative">
+              <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 -translate-y-1/2 z-0"></div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                <div className="bg-white p-6 text-center">
+                  <div className="w-16 h-16 mx-auto bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg border-4 border-white">
+                    1
+                  </div>
+                  <h3 className="text-xl font-bold text-textDark mb-2">Give</h3>
+                  <p className="text-text text-sm">
+                    Your support fuels the restoration movement and helps invest in the
+                    next generation of technical leaders.
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 text-center">
+                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg">
+                    2
+                  </div>
+                  <h3 className="text-xl font-bold text-textDark mb-2">Equip</h3>
+                  <p className="text-text text-sm">
+                    We provide students with tools, training, and hands-on instruction
+                    through the Shoova Restoration Campus.
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 text-center">
+                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg">
+                    3
+                  </div>
+                  <h3 className="text-xl font-bold text-textDark mb-2">Restore</h3>
+                  <p className="text-text text-sm">
+                    Graduates apply their skills to reclaim land, protect water, and
+                    create sustainable alternatives to galamsey.
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 text-center">
+                  <div className="w-16 h-16 mx-auto bg-white border-2 border-primary text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg">
+                    4
+                  </div>
+                  <h3 className="text-xl font-bold text-textDark mb-2">Multiply</h3>
+                  <p className="text-text text-sm">
+                    Restored land, dignified livelihoods, and stronger communities
+                    create long-term impact for future generations.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section> */}
+        {/* Ready to Restore the Land */}
+        <section id="ready_to_restore" className="py-24 bg-[#f7f3ea]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {/* Heading */}
+            <div className="text-center mb-16">
+              <p className="text-secondary font-bold tracking-wider uppercase text-sm mb-4">
+                Restoration Tiers
+              </p>
+
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mb-6">
+                Choose Your Impact
+              </h2>
+
+              <p className="text-xl text-text max-w-2xl mx-auto">
+                Every contribution fuels restoration — from soil testing to building the Shoova Restoration Campus.
+              </p>
+            </div>
+
+
+            <Swiper
+              modules={[Navigation]}
+              navigation
+              grabCursor
+              spaceBetween={24}
+              slidesPerView={1.2}
+              breakpoints={{
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 }
+              }}
+            >
+
+              {/* Root Seed */}
+              <SwiperSlide>
+                <Link
+                  to="/donate"
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/restore.jpg"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  {/* Dark overlay */}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  {/* Default Title */}
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      The Root Seed
+                    </h3>
+                  </div>
+
+                  {/* Hover Content */}
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$25</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      The Root Seed
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Funds one day of land reclamation soil-testing for a student field team.
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Join the Restoration
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
+
+
+              {/* Tool Kit */}
+              <SwiperSlide>
+                <Link
+                  to="/donate"
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/train.jpg"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      The Tool Kit
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$100</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      The Tool Kit
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Provides a set of high-quality tools for one student.
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Sponsor a Future Architect
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
+
+
+              {/* Scholar Path */}
+              <SwiperSlide>
+                <Link
+                  to="/donate"
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/youth.jpg"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      The Scholar's Path
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$500</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      The Scholar's Path
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Covers a full semester of training for a youth transitioning out of galamsey.
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Sponsor a Future Architect
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
+
+
+              {/* Campus Catalyst */}
+              <SwiperSlide>
+                <Link
+                  to="/donate"
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/community.jpg"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      Campus Catalyst
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$5000+</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      Campus Catalyst
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Directly funds the construction of dormitories or staff housing at the Shoova Restoration Campus.
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Fund a Hectare of Hope
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
+
+            </Swiper>
+
+          </div>
+        </section>
+        {/* Final CTA */}
+        <section id="join_the_restoration" className="py-24 relative overflow-hidden">
+
+          {/* Background */}
+          <div className="absolute inset-0 bg-primary">
+            <Image
+              variant="cover"
+              className="w-full h-full object-cover opacity-20 mix-blend-overlay"
+              src="/img/community.jpg"
+              alt="Shoova restoration movement"
+            />
+          </div>
+
+          <div className="absolute inset-0 bg-black/30"></div>
+
+          {/* Content */}
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center text-white">
+
+            <h2 className="text-5xl md:text-6xl font-heading font-bold mb-6">
+              Help Turn Scars Back Into Strength
+            </h2>
+
+            <p className="text-xl text-teal-100 mb-10">
+              Restore land. Equip youth. Rebuild communities.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+              <Link
+                className="px-10 py-5 bg-secondary hover:bg-secondaryHover text-white font-bold text-xl rounded-full transition-all shadow-xl transform hover:scale-105"
+                to="/donate"
+              >
+                Join the Restoration
+              </Link>
+
+              <Link
+                className="px-10 py-5 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/30 text-white font-bold text-xl rounded-full transition-all"
+                to="/contact"
+              >
+                Partner With Us
+              </Link>
+
+            </div>
+
           </div>
         </section>
       </>

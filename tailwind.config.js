@@ -21,7 +21,7 @@ module.exports = {
 
        fontFamily: {
     heading: ["Playfair Display", "serif"],
-    body: ["Playfair Display", "sans-serif"]
+    body: ["Inter", "sans-serif"]
   }
     }
   },
