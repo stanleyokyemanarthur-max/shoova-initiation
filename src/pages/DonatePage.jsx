@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
+import { Book, Droplet, Globe, HeartHandshake, ChevronDown } from "lucide-react";
 import { ArrowRight } from 'lucide-react';
 import { BookOpen } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Droplets } from 'lucide-react';
 import { Facebook } from 'lucide-react';
 import { Heart } from 'lucide-react';
-import { HeartHandshake } from 'lucide-react';
 import { HeartPulse } from 'lucide-react';
 import { Instagram } from 'lucide-react';
 import { Link } from '../components/Link';
@@ -14,120 +14,404 @@ import { ShieldCheck } from 'lucide-react';
 import { Text } from '../components/Text';
 import { Twitter } from 'lucide-react';
 import { Youtube } from 'lucide-react';
+import { useLocation } from "react-router-dom";
 
 export const DonatePage = ({ className, children, variant, contentKey, ...props }) => {
+  const location = useLocation();
+  const selectedTier = location.state?.amount;
+  const [donationType, setDonationType] = useState("monthly");
+  const [amount, setAmount] = useState(selectedTier || 500);
+  const [customAmount, setCustomAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [highlight, setHighlight] = useState(false);
+
+  const finalAmount =
+    customAmount !== "" ? Number(customAmount) : amount;
+
+  const getImpactMessage = (value) => {
+    if (value >= 5000) {
+      return "Helps build critical infrastructure for the Shoova Restoration Campus.";
+    }
+
+    if (value >= 2500) {
+      return "Helps equip restoration labs and technical training spaces.";
+    }
+
+    if (value >= 1000) {
+      return "Supports a Restoration Fellow's advanced training.";
+    }
+
+    if (value >= 500) {
+      return "Sponsors vocational training for a restoration leader.";
+    }
+
+    if (value >= 100) {
+      return "Provides tools and equipment for restoration training.";
+    }
+
+    if (value >= 25) {
+      return "Provides restoration seedlings and learning materials.";
+    }
+
+    return "Your support helps restore land and train future environmental leaders.";
+  };
+
+  const handleAmountSelect = (value) => {
+    setAmount(value);
+    setCustomAmount("");
+
+    setHighlight(true);
+    setTimeout(() => setHighlight(false), 400);
+  };
+
+  const handleCustomAmount = (e) => {
+    const value = e.target.value;
+
+    setCustomAmount(value);
+
+    if (value === "") {
+      setAmount(500);
+      return;
+    }
+
+    const numericValue = Number(value);
+
+    if (!isNaN(numericValue) && numericValue >= 0) {
+      setAmount(numericValue);
+    }
+    setHighlight(true);
+    setTimeout(() => setHighlight(false), 400);
+
+  };
+
+  const handleDonate = async () => {
+
+
+    if (!finalAmount || finalAmount < 5) {
+      alert("Minimum donation is $5");
+      return;
+    }
+
+    try {
+      setLoading(true); // start loading
+      const res = await fetch(
+        "http://localhost:5000/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: finalAmount,
+            donationType,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      // Redirect user to Stripe checkout
+      window.location.href = data.url;
+
+    } catch (error) {
+      console.error("Stripe error:", error);
+      alert("Payment failed. Please try again.");
+      setLoading(false)
+    }
+  };
+  const faqs = [
+    {
+      question: "What is the Shoova Restoration Campus?",
+      answer:
+        "The Shoova Restoration Campus is an upcoming 8-acre vocational training institute in Ghana’s Eastern Region designed to equip youth with world-class engineering, environmental restoration, and leadership skills that help transition communities away from illegal mining."
+    },
+    {
+      question: "Why focus on youth involved in galamsey?",
+      answer:
+        "Many young people turn to illegal mining due to limited economic opportunities. Shoova believes these youth are not the problem—they are the untapped solution. Through training and mentorship we help them become the architects of Ghana’s environmental restoration."
+    },
+    {
+      question: "How can I support the Shoova Initiative?",
+      answer:
+        "You can support Shoova by sponsoring student training, funding land restoration programs, partnering as an institution, or helping spread the mission of restoring Ghana’s land and empowering the next generation of technical leaders."
+    },
+    {
+      question: "Is Shoova Initiative a registered nonprofit?",
+      answer:
+        "Shoova Initiative is progressing through nonprofit registration processes while establishing governance and operational structures in both the United States and Ghana."
+    }
+  ];
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
   return (
     <div className="font-body antialiased">
       <>
-     
+
         {/* Make A Difference Today */}
-        <section id="make_a_difference_today" className="pt-32 pb-12 bg-primary text-white text-center">
-          <div className="max-w-4xl mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6"> Make a Difference Today </h1>
-            <p className="text-xl text-teal-100">
-               Your generosity fuels our mission. 100% of public donations go directly to funding our projects. 
+        <section
+          id="make_a_difference_today"
+          className="relative pt-40 pb-40 text-white"
+          style={{
+            backgroundImage: "url('/img/lands.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+
+          <div className="relative max-w-5xl mx-auto px-4 text-left">
+            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+              Join the Shoova Restoration Movement
+            </h1>
+
+            <p className="text-xl text-gray-200 max-w-xl">
+              Your support helps build the Shoova Restoration Campus, train youth in
+              environmental restoration, and transform communities across Africa.
             </p>
           </div>
         </section>
         {/* Your Impact */}
-        <section id="your_impact" className="py-12 -mt-8">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+        <section id="your_impact" className="-mt-32 pb-20">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 cursor-default">
+            <div
+              className={`bg-white rounded-3xl overflow-hidden border transition-all duration-300 ${highlight
+                ? "shadow-[0_0_25px_rgba(34,197,94,0.25)] border-primary"
+                : "shadow-2xl border-gray-100"
+                }`}
+            >
               <div className="grid grid-cols-1 md:grid-cols-5">
+
                 {/* Left: Impact Info */}
                 <div className="md:col-span-2 bg-gray-50 p-8 border-r border-gray-100">
-                  <h3 className="text-xl font-bold text-textDark mb-4"> Your Impact </h3>
+                  <h3 className="text-xl font-bold text-textDark mb-6">
+                    Your Impact
+                  </h3>
+
                   <div className="space-y-6">
+
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0"><Droplets className="w-5 h-5 text-primary" /></div>
+                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Droplets className="w-5 h-5 text-primary" />
+                      </div>
                       <div>
-                        <p className="font-bold text-textDark"> $25 </p>
-                        <p className="text-sm text-text"> Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                        <p className="font-bold text-textDark">$25 – The Root Seed</p>
+                        <p className="text-sm text-text">
+                          Helps provide restoration seedlings and learning materials
+                          for community trainees.
+                        </p>
                       </div>
                     </div>
+
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0"><BookOpen className="w-5 h-5 text-secondary" /></div>
+                      <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-5 h-5 text-secondary" />
+                      </div>
                       <div>
-                        <p className="font-bold text-textDark"> $100 </p>
-                        <p className="text-sm text-text"> Lorem ipsum dolor sit amet consectetur adipisicing. </p>
+                        <p className="font-bold text-textDark">$100 – The Tool Kit</p>
+                        <p className="text-sm text-text">
+                          Equips students with hands-on tools used in restoration
+                          training and environmental work.
+                        </p>
                       </div>
                     </div>
+
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center flex-shrink-0"><HeartPulse className="w-5 h-5 text-yellow-700" /></div>
+                      <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
+                        <HeartPulse className="w-5 h-5 text-yellow-700" />
+                      </div>
                       <div>
-                        <p className="font-bold text-textDark"> $500 </p>
-                        <p className="text-sm text-text"> Lorem ipsum dolor sit amet consectetur. </p>
+                        <p className="font-bold text-textDark">$500 – The Scholar's Path</p>
+                        <p className="text-sm text-text">
+                          Supports vocational training for young restoration leaders
+                          at the Shoova Restoration Campus.
+                        </p>
                       </div>
                     </div>
+
                   </div>
-                  <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
+
+                  {/* Secure Notice */}
+                  <div className="mt-10 p-4 bg-blue-50 rounded-xl border border-blue-100">
                     <div className="flex items-center gap-2 mb-2">
                       <ShieldCheck className="w-5 h-5 text-blue-600" />
-                      <Text variant="bold" className="font-bold text-blue-800 text-sm"> Secure Donation </Text>
+                      <Text variant="bold" className="font-bold text-blue-800 text-sm">
+                        Secure Donation
+                      </Text>
                     </div>
-                    <p className="text-xs text-blue-600"> Your transaction is SSL encrypted and secure. </p>
+                    <p className="text-xs text-blue-600">
+                      Secure payment powered by Stripe
+                    </p>
                   </div>
                 </div>
-                {/* Right: Form */}
-                <div className="md:col-span-3 p-8">
+
+                {/* Right: Donation Form */}
+                <div className="md:col-span-3 p-10">
+
                   {/* Frequency Toggle */}
-                  <div className="flex justify-center mb-8">
-                    <div className="bg-gray-100 p-1 rounded-full inline-flex">
-                      <Button variant="primary" contentKey="cta_33" className="px-6 py-2 rounded-full text-sm font-bold bg-white shadow-sm text-primaryDark transition-all"> Monthly </Button>
-                      <Button className="px-6 py-2 rounded-full text-sm font-bold text-gray-500 hover:text-textDark transition-all"> One-Time </Button>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+
+                    <button
+                      onClick={() => setDonationType("one-time")}
+                      className={`py-3 rounded-md font-bold tracking-wide transition ${donationType === "one-time"
+                        ? "bg-primary text-white"
+                        : "border-2 border-primary text-primary"
+                        }`}
+                    >
+                      ONE TIME
+                    </button>
+
+                    <button
+                      onClick={() => setDonationType("monthly")}
+                      className={`py-3 rounded-md font-bold tracking-wide transition ${donationType === "monthly"
+                        ? "bg-primary text-white"
+                        : "border-2 border-primary text-primary"
+                        }`}
+                    >
+                      MONTHLY
+                    </button>
+
                   </div>
-                  {/* Amount Grid */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    <Button variant="primary" className="py-4 border-2 border-gray-200 rounded-xl font-bold text-lg hover:border-primary hover:text-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"> $25 </Button>
-                    <button className="py-4 border-2 border-primary bg-primary text-white rounded-xl font-bold text-lg shadow-lg transition-all transform scale-105"> $100 </button>
-                    <Button variant="primary" className="py-4 border-2 border-gray-200 rounded-xl font-bold text-lg hover:border-primary hover:text-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"> $500 </Button>
+
+
+                  {/* Amount Buttons */}
+                  <div className="grid grid-cols-3 gap-3 mb-8">
+
+                    {[
+                      { amount: 25, label: "Root Seed" },
+                      { amount: 100, label: "Tool Kit" },
+                      { amount: 500, label: "Scholar's Path" },
+                      { amount: 1000, label: "Restoration Fellow" },
+                      { amount: 2500, label: "Lab Anchor" },
+                      { amount: 5000, label: "Campus Catalyst" }
+                    ].map((item) => (
+                      <button
+                        key={item.amount}
+                        onClick={() => handleAmountSelect(item.amount)}
+                        className={`py-3 rounded-md font-bold transition ${customAmount === "" && amount === item.amount
+                          ? "bg-primary text-white"
+                          : "border-2 border-primary text-primary hover:bg-primary hover:text-white"
+                          }`}
+                      >
+                        ${item.amount.toLocaleString()}
+                        <div className="text-xs opacity-80">{item.label}</div>
+                      </button>
+                    ))}
+
                   </div>
+
+
                   {/* Custom Amount */}
-                  <div className="relative mb-8">
-                    <Text variant="bold" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold"> $ </Text>
-                    <input placeholder="Other Amount" type="number" className="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-0 font-bold text-textDark" />
+                  <div className="flex items-center border-b-2 border-primary mb-6">
+
+                    <span className="text-xl font-bold text-primary pr-2">$</span>
+
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      value={customAmount}
+                      onChange={handleCustomAmount}
+                      min="5"
+                      max="100000"
+                      className="w-full py-2 outline-none text-lg font-bold"
+                    />
+
+                    <span className="text-sm text-primary pl-2">USD</span>
+
                   </div>
-                  {/* Payment Button */}
-                  <button className="w-full py-4 bg-secondary hover:bg-secondaryHover text-white font-bold rounded-xl text-lg shadow-xl shadow-secondary/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                     Donate $500 Now 
-                    <ArrowRight className="w-5 h-5" />
+                  {/* Dedicate */}
+                  {/* <button className="w-full py-3 border-2 border-primary rounded-md text-primary font-bold tracking-wide mb-4 hover:bg-primary hover:text-white transition">
+                    DEDICATE THIS GIFT
+                  </button> */}
+
+
+                  {/* Donate */}
+                  {/* Impact Message */}
+                  <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 text-center">
+                    <p className="text-xs uppercase tracking-wide text-primary/70 mb-1">
+                      Your Impact
+                    </p>
+
+                    <p className="text-sm text-primary font-medium">
+                      {getImpactMessage(finalAmount)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDonate}
+                    disabled={loading || finalAmount < 5}
+                    className={`w-full py-3 border-2 border-primary rounded-md font-bold tracking-wide transition
+                    ${loading || finalAmount < 5
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-primary hover:text-white"
+                      }`}
+                  >
+                    {loading
+                      ? "Processing..."
+                      : `DONATE $${Number(finalAmount).toLocaleString()}`}
                   </button>
-                  <p className="text-center text-xs text-gray-400 mt-4">
-                     By donating, you agree to our Terms of Service and Privacy Policy. 
-                  </p>
+
+
                 </div>
               </div>
             </div>
           </div>
         </section>
         {/* Frequently Asked Questions */}
-        <section id="frequently_asked_questions" className="py-20 bg-white">
+        <section id="frequently_asked_questions" className="py-24 bg-white">
+
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-heading font-bold text-center mb-12"> Frequently Asked Questions </h2>
-            <div className="space-y-6">
-              <div className="border border-gray-200 rounded-2xl p-6 hover:border-primary/30 transition-colors">
-                <h3 className="text-lg font-bold text-textDark mb-2"> Is my donation tax-deductible? </h3>
-                <p className="text-text">
-                   Yes, HopeHorizon is a registered 501(c)(3) non-profit organization. All donations are tax-deductible to the extent allowed by law. 
-                </p>
-              </div>
-              <div className="border border-gray-200 rounded-2xl p-6 hover:border-primary/30 transition-colors">
-                <h3 className="text-lg font-bold text-textDark mb-2"> How much of my donation goes to the cause? </h3>
-                <p className="text-text">
-                   We are proud that 100% of public donations go directly to funding our programs. Our operating costs are covered by a group of private donors. 
-                </p>
-              </div>
-              <div className="border border-gray-200 rounded-2xl p-6 hover:border-primary/30 transition-colors">
-                <h3 className="text-lg font-bold text-textDark mb-2"> Can I cancel my monthly donation? </h3>
-                <p className="text-text">
-                   Absolutely. You can pause, change, or cancel your monthly donation at any time through your donor portal or by contacting us. 
-                </p>
-              </div>
+
+            <h2 className="text-3xl font-heading font-bold text-textDark text-center mb-12">
+              Frequently Asked Questions
+            </h2>
+
+            <div className="space-y-4">
+
+              {faqs.map((faq, index) => (
+
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-xl overflow-hidden"
+                >
+
+                  {/* Question */}
+                  <button
+                    onClick={() => toggleFAQ(index)}
+                    className="w-full flex justify-between items-center text-left p-6 hover:bg-gray-50 transition"
+                  >
+
+                    <span className="font-bold text-lg text-textDark">
+                      {faq.question}
+                    </span>
+
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform duration-300 ${openIndex === index ? "rotate-180 text-primary" : "text-gray-400"
+                        }`}
+                    />
+
+                  </button>
+
+                  {/* Answer */}
+                  <div
+                    className={`transition-all duration-300 overflow-hidden ${openIndex === index ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <p className="px-6 pb-6 text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+
+                </div>
+
+              ))}
+
             </div>
+
           </div>
+
         </section>
-        
       </>
     </div>
   );

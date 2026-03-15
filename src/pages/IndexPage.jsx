@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import React, { useState } from 'react';
@@ -123,8 +123,8 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
             </div>
           </div>
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce">
-  ↓
-</div>
+            ↓
+          </div>
         </section>
         {/* Restoration Process */}
         <section id="restoration_process" className="py-20 bg-white">
@@ -784,11 +784,17 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
 
             <Swiper
-              modules={[Navigation]}
+              modules={[Navigation, Autoplay]}
               navigation
               grabCursor
               spaceBetween={24}
               slidesPerView={1.2}
+              loop
+
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false
+              }}
               breakpoints={{
                 640: { slidesPerView: 2 },
                 1024: { slidesPerView: 3 },
@@ -799,7 +805,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
               {/* Root Seed */}
               <SwiperSlide>
                 <Link
-                  to="/donate"
+                  to="/donate " state={{ amount: 25 }}
                   className="group relative h-[420px] rounded-xl overflow-hidden block"
                 >
 
@@ -844,7 +850,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
               {/* Tool Kit */}
               <SwiperSlide>
                 <Link
-                  to="/donate"
+                  to="/donate " state={{ amount: 100 }}
                   className="group relative h-[420px] rounded-xl overflow-hidden block"
                 >
 
@@ -886,7 +892,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
               {/* Scholar Path */}
               <SwiperSlide>
                 <Link
-                  to="/donate"
+                  to="/donate " state={{ amount: 500 }}
                   className="group relative h-[420px] rounded-xl overflow-hidden block"
                 >
 
@@ -923,12 +929,92 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
                 </Link>
               </SwiperSlide>
+              {/* Restoration Fello*/}
+              <SwiperSlide>
+                <Link
+                  to="/donate " state={{ amount: 1000 }}
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/2.png"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      The Scholar's Path
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$1,000</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      The Scholar's Path
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Covers a full semester of tuition/training and boarding for a local youth transitioning out of galamsey.
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Sponsor a Restoration Fellow
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
+              {/* Lab Anchor*/}
+              <SwiperSlide>
+                <Link
+                  to="/donate " state={{ amount: 2500 }}
+                  className="group relative h-[420px] rounded-xl overflow-hidden block"
+                >
+
+                  <img
+                    src="/img/eng.jpg"
+                    className="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/80 transition duration-500" />
+
+                  <div className="absolute bottom-6 left-6 text-white z-10 group-hover:opacity-0 transition">
+                    <h3 className="text-xl font-heading font-bold">
+                      The Lab Anchor
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-10 text-white opacity-0 group-hover:opacity-100 transition duration-500">
+
+                    <p className="text-secondary font-bold text-sm mb-3">$2,500</p>
+
+                    <h3 className="text-2xl font-heading font-bold mb-4">
+                      The Lab Anchor
+                    </h3>
+
+                    <p className="text-white/90 text-sm mb-6 max-w-xs">
+                      Equips our Engineering Lab with a major piece of machinery
+                    </p>
+
+                    <button className="bg-secondary hover:bg-secondaryHover px-6 py-3 rounded-full font-semibold">
+                      Equip the Engineering Lab
+                    </button>
+
+                  </div>
+
+                </Link>
+              </SwiperSlide>
 
 
               {/* Campus Catalyst */}
               <SwiperSlide>
                 <Link
-                  to="/donate"
+                  to="/donate" state={{ amount: 5000 }}
                   className="group relative h-[420px] rounded-xl overflow-hidden block"
                 >
 

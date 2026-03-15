@@ -1,70 +1,102 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Book } from 'lucide-react';
-import { Button } from '../components/Button';
-import { Droplet } from 'lucide-react';
-import { Facebook } from 'lucide-react';
-import { Globe } from 'lucide-react';
-import { Heart } from 'lucide-react';
-import { HeartHandshake } from 'lucide-react';
+import { Book, Droplet, Globe, HeartHandshake, ChevronDown } from "lucide-react";
 import { Image } from '../components/Image';
-import { Instagram } from 'lucide-react';
 import { Link } from '../components/Link';
-import { Menu } from 'lucide-react';
 import { Text } from '../components/Text';
-import { Twitter } from 'lucide-react';
-import { Youtube } from 'lucide-react';
-import { ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
+
 
 export const AboutPage = ({ className, children, variant, contentKey, ...props }) => {
-  const [openFAQ, setOpenFAQ] = useState(null);
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: "easeOut" }
+    }
+  };
 
-const toggleFAQ = (index) => {
-  setOpenFAQ(openFAQ === index ? null : index);
-};
+  const staggerContainer = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
+  const faqs = [
+    {
+      question: "What is the Shoova Restoration Campus?",
+      answer:
+        "The Shoova Restoration Campus is an upcoming 8-acre vocational training institute in Ghana’s Eastern Region designed to equip youth with world-class engineering, environmental restoration, and leadership skills that help transition communities away from illegal mining."
+    },
+    {
+      question: "Why focus on youth involved in galamsey?",
+      answer:
+        "Many young people turn to illegal mining due to limited economic opportunities. Shoova believes these youth are not the problem—they are the untapped solution. Through training and mentorship we help them become the architects of Ghana’s environmental restoration."
+    },
+    {
+      question: "How can I support the Shoova Initiative?",
+      answer:
+        "You can support Shoova by sponsoring student training, funding land restoration programs, partnering as an institution, or helping spread the mission of restoring Ghana’s land and empowering the next generation of technical leaders."
+    },
+    {
+      question: "Is Shoova Initiative a registered nonprofit?",
+      answer:
+        "Shoova Initiative is progressing through nonprofit registration processes while establishing governance and operational structures in both the United States and Ghana."
+    }
+  ];
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   const leadership = [
-  {
-    name: "William Agyekum",
-    role: "President & Executive Director",
-    detail: "Project Management — USA",
-    image: "/img/willie.jpg",
-  },
-  {
-    name: "Salome Agyekum, CA",
-    role: "Treasurer",
-    detail: "Data Analytics & Finance — USA",
-    image: "/img/salome.jpg",
-  },
-  {
-    name: "Kwame Opon-Yeboah",
-    role: "Director & Head of Ghana Operations",
-    detail: "Legal & Community Relations — Ghana",
-    image: "/img/opon.jpg",
-  },
-  {
-    name: "Julius Botchchway",
-    role: "Director of Ghana Operations",
-    detail: "IT Infrastructure — Ghana",
-    image: "/img/julius.jpeg",
-  },
-  {
-    name: "Isaac Waddy Adjei-Ampofo",
-    role: "Director of Ghana Operations",
-    detail: "Education — Ghana",
-    image: "/img/isaac.jpg",
-  },
-  {
-    name: "Keneh Wemba",
-    role: "Secretary",
-    detail: "Administration — USA",
-    image: "/img/keneh.jpg",
-  },
-  {
-    name: "Sandra Agyekum",
-    role: "Director",
-    detail: "Community Relations — USA",
-    image: "/img/sandra.jpg",
-  }
-];
+    {
+      name: "William Agyekum",
+      role: "President & Executive Director",
+      detail: "Project Management — USA",
+      image: "/img/willie.jpg",
+    },
+    {
+      name: "Salome Agyekum, CA",
+      role: "Treasurer",
+      detail: "Data Analytics & Finance — USA",
+      image: "/img/salome.jpg",
+    },
+    {
+      name: "Kwame Opon-Yeboah",
+      role: "Director & Head of Ghana Operations",
+      detail: "Legal & Community Relations — Ghana",
+      image: "/img/opon.jpg",
+    },
+    {
+      name: "Julius Botchchway",
+      role: "Director of Ghana Operations",
+      detail: "IT Infrastructure — Ghana",
+      image: "/img/julius.jpeg",
+    },
+    {
+      name: "Isaac Waddy Adjei-Ampofo",
+      role: "Director of Ghana Operations",
+      detail: "Education — Ghana",
+      image: "/img/isaac.jpg",
+    },
+    {
+      name: "Keneh Wemba",
+      role: "Secretary",
+      detail: "Administration — USA",
+      image: "/img/keneh.jpg",
+    },
+    {
+      name: "Sandra Agyekum",
+      role: "Director",
+      detail: "Community Relations — USA",
+      image: "/img/sandra.jpg",
+    }
+  ];
   const [years, setYears] = useState(0);
   const [communities, setCommunities] = useState(0);
 
@@ -72,7 +104,7 @@ const toggleFAQ = (index) => {
   const [startCount, setStartCount] = useState(false);
 
   useEffect(() => {
-    
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setStartCount(true);
@@ -159,20 +191,29 @@ const toggleFAQ = (index) => {
 
         </section>
 
-        <section className="py-28 bg-accent">
+        <motion.section
+          className="py-28 bg-accent"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
 
             {/* LEFT STORY */}
             <div>
-              <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+              <motion.h2
+                variants={fadeUp}
+                className="text-4xl md:text-5xl font-heading font-bold mb-6"
+              >
                 The Shoova Solution
-              </h2>
+              </motion.h2>
 
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              <motion.p variants={fadeUp} className="text-lg text-gray-600 mb-6 leading-relaxed">
                 Through our 8-acre Restoration Campus, we equip youth with the
                 technical skills needed to heal damaged land and build sustainable
                 livelihoods.
-              </p>
+              </motion.p>
 
               <ul className="space-y-3 text-lg font-medium text-gray-800">
                 <li>Land reclamation</li>
@@ -234,7 +275,7 @@ const toggleFAQ = (index) => {
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         <section id="mission_vision" className="pt-40 pb-24 bg-white">
 
@@ -377,299 +418,263 @@ const toggleFAQ = (index) => {
         </section>
 
         {/* Crisis & Solution */}
-<section id="crisis_solution" className="py-28 bg-white">
+        <section id="crisis_solution" className="py-28 bg-white">
 
-  <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-start">
+          <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-start">
 
-    {/* PROBLEM */}
-    <div>
+            {/* PROBLEM */}
+            <div>
 
-      <p className="text-red-600 font-bold tracking-widest uppercase text-sm mb-4">
-        The Problem
-      </p>
+              <p className="text-red-600 font-bold tracking-widest uppercase text-sm mb-4">
+                The Problem
+              </p>
 
-      <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-        The Scars of Galamsey
-      </h2>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+                The Scars of Galamsey
+              </h2>
 
-      <p className="text-lg text-gray-600 leading-relaxed mb-6">
-        Ghana is facing an ecological and humanitarian crisis. Illegal
-        small-scale mining — known locally as galamsey — has poisoned
-        rivers, devastated forests, and scarred once fertile land across
-        the Eastern Region.
-      </p>
+              <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                Ghana is facing an ecological and humanitarian crisis. Illegal
+                small-scale mining — known locally as galamsey — has poisoned
+                rivers, devastated forests, and scarred once fertile land across
+                the Eastern Region.
+              </p>
 
-      <p className="text-lg text-gray-600 leading-relaxed">
-        Thousands of young people are trapped in dangerous, low-paying
-        extractive labor with few alternatives. The land is crying out,
-        and a generation is losing hope. At Shoova Initiative, we believe
-        the youth forced into these mines are not the problem — they are
-        the untapped solution waiting for the right opportunity.
-      </p>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Thousands of young people are trapped in dangerous, low-paying
+                extractive labor with few alternatives. The land is crying out,
+                and a generation is losing hope. At Shoova Initiative, we believe
+                the youth forced into these mines are not the problem — they are
+                the untapped solution waiting for the right opportunity.
+              </p>
 
-      {/* Image */}
-      <div className="mt-10">
-        <img
-          src="/img/galamsey.jpg"
-          alt="Galamsey destruction"
-          className="rounded-xl shadow-lg w-full h-[320px] object-cover"
-        />
-      </div>
+              {/* Image */}
+              <div className="mt-10">
+                <img
+                  src="/img/galamsey.jpg"
+                  alt="Galamsey destruction"
+                  className="rounded-xl shadow-lg w-full h-[320px] object-cover"
+                />
+              </div>
 
-    </div>
+            </div>
 
 
-    {/* SOLUTION */}
-    <div>
+            {/* SOLUTION */}
+            <div>
 
-      <p className="text-green-600 font-bold tracking-widest uppercase text-sm mb-4">
-        The Solution
-      </p>
+              <p className="text-green-600 font-bold tracking-widest uppercase text-sm mb-4">
+                The Solution
+              </p>
 
-      <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-        The World-Class Vocational Institute
-      </h2>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+                The World-Class Vocational Institute
+              </h2>
 
-      <p className="text-lg text-gray-600 leading-relaxed mb-10">
-        The Shoova Initiative is building an 8-acre Restoration Campus
-        dedicated to hands-on, high-tech training that dignifies labor
-        while healing the environment. Instead of extracting wealth
-        from the land, we train the next generation to restore it.
-      </p>
+              <p className="text-lg text-gray-600 leading-relaxed mb-10">
+                The Shoova Initiative is building an 8-acre Restoration Campus
+                dedicated to hands-on, high-tech training that dignifies labor
+                while healing the environment. Instead of extracting wealth
+                from the land, we train the next generation to restore it.
+              </p>
 
-      {/* Tracks */}
-      <div className="space-y-8">
+              {/* Tracks */}
+              <div className="space-y-8">
 
-        <div>
-          <h3 className="text-xl font-semibold mb-2">
-            School of Engineering & Fabrication
-          </h3>
-          <p className="text-gray-600">
-            Mastering the trades that build nations: precision welding,
-            heavy machinery repair, and advanced metal fabrication.
-            We transform raw talent into industrial expertise.
-          </p>
-        </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    School of Engineering & Fabrication
+                  </h3>
+                  <p className="text-gray-600">
+                    Mastering the trades that build nations: precision welding,
+                    heavy machinery repair, and advanced metal fabrication.
+                    We transform raw talent into industrial expertise.
+                  </p>
+                </div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-2">
-            School of Sustainable Futures
-          </h3>
-          <p className="text-gray-600">
-            Leading the green transition through solar energy installation,
-            land reclamation techniques, and sustainable agricultural
-            technology.
-          </p>
-        </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    School of Sustainable Futures
+                  </h3>
+                  <p className="text-gray-600">
+                    Leading the green transition through solar energy installation,
+                    land reclamation techniques, and sustainable agricultural
+                    technology.
+                  </p>
+                </div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-2">
-            School of Ethical Leadership
-          </h3>
-          <p className="text-gray-600">
-            Data-driven management, bookkeeping, and cooperative business
-            ethics. We are not only training workers — we are preparing
-            the next generation of employers and community leaders.
-          </p>
-        </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    School of Ethical Leadership
+                  </h3>
+                  <p className="text-gray-600">
+                    Data-driven management, bookkeeping, and cooperative business
+                    ethics. We are not only training workers — we are preparing
+                    the next generation of employers and community leaders.
+                  </p>
+                </div>
 
-      </div>
+              </div>
 
-      {/* Image */}
-      <div className="mt-10">
-        <img
-          src="/img/solar.jpg"
-          alt="Vocational training"
-          className="rounded-xl shadow-lg w-full h-[320px] object-cover"
-        />
-      </div>
+              {/* Image */}
+              <div className="mt-10">
+                <img
+                  src="/img/solar.jpg"
+                  alt="Vocational training"
+                  className="rounded-xl shadow-lg w-full h-[320px] object-cover"
+                />
+              </div>
 
-    </div>
-
-  </div>
-
-</section>
-
-      
-{/* Meet Our Leadership */}
-<section id="meet_our_leadership" className="py-24 bg-white">
-
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <div className="text-center mb-16">
-      <h2 className="text-4xl font-heading font-bold text-textDark mb-6">
-        Meet Our Leadership
-      </h2>
-
-      <p className="text-xl text-text max-w-2xl mx-auto">
-        The coalition of leaders guiding the Shoova Restoration Movement across Ghana and the United States.
-      </p>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10">
-
-      {leadership.map((member, index) => (
-
-        <div key={index} className="text-center group">
-
-          <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gray-100 group-hover:border-primary transition">
-
-            <Image
-              variant="cover"
-              className="w-full h-full object-cover"
-              src={member.image}
-              alt={member.name}
-            />
+            </div>
 
           </div>
 
-          <h3 className="text-xl font-bold text-textDark">
-            {member.name}
-          </h3>
+        </section>
 
-          <p className="text-primary font-medium">
-            {member.role}
-          </p>
 
-          <p className="text-sm text-gray-500">
-            {member.detail}
-          </p>
+        {/* Meet Our Leadership */}
+        <section id="meet_our_leadership" className="py-24 bg-white">
 
-        </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      ))}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-heading font-bold text-textDark mb-6">
+                Meet Our Leadership
+              </h2>
 
-    </div>
+              <p className="text-xl text-text max-w-2xl mx-auto">
+                The coalition of leaders guiding the Shoova Restoration Movement across Ghana and the United States.
+              </p>
+            </div>
 
-  </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10">
 
-</section>
-   {/* Frequently Asked Questions */}
-<section id="frequently_asked_questions" className="py-20 bg-white">
+              {leadership.map((member, index) => (
 
-  <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div key={index} className="text-center group">
 
-    <h2 className="text-3xl font-heading font-bold text-textDark text-center mb-12">
-      Frequently Asked Questions
-    </h2>
+                  <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gray-100 group-hover:border-primary transition">
 
-    <div className="space-y-4">
+                    <Image
+                      variant="cover"
+                      className="w-full h-full object-cover"
+                      src={member.image}
+                      alt={member.name}
+                    />
 
-      {/* FAQ 1 */}
-      <div
-        onClick={() => toggleFAQ(1)}
-        className="border border-gray-200 rounded-xl p-6 hover:border-primary/50 transition cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-lg text-textDark">
-            What is the Shoova Restoration Campus?
-          </h3>
+                  </div>
 
-          <ChevronDown
-            className={`w-5 h-5 transition-transform ${
-              openFAQ === 1 ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+                  <h3 className="text-xl font-bold text-textDark">
+                    {member.name}
+                  </h3>
 
-        {openFAQ === 1 && (
-          <p className="text-text mt-4">
-            The Shoova Restoration Campus is an upcoming 8-acre vocational
-            training institute in Ghana’s Eastern Region designed to equip
-            youth with world-class engineering, environmental restoration,
-            and leadership skills that help transition communities away
-            from illegal mining.
-          </p>
-        )}
-      </div>
+                  <p className="text-primary font-medium">
+                    {member.role}
+                  </p>
 
-      {/* FAQ 2 */}
-      <div
-        onClick={() => toggleFAQ(2)}
-        className="border border-gray-200 rounded-xl p-6 hover:border-primary/50 transition cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-lg text-textDark">
-            Why focus on youth involved in galamsey?
-          </h3>
+                  <p className="text-sm text-gray-500">
+                    {member.detail}
+                  </p>
 
-          <ChevronDown
-            className={`w-5 h-5 transition-transform ${
-              openFAQ === 2 ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+                </div>
 
-        {openFAQ === 2 && (
-          <p className="text-text mt-4">
-            Many young people turn to illegal mining due to limited
-            economic opportunities. Shoova believes these youth are not
-            the problem—they are the untapped solution. By providing
-            vocational training and leadership development, we empower
-            them to rebuild their communities and restore the land.
-          </p>
-        )}
-      </div>
+              ))}
 
-      {/* FAQ 3 */}
-      <div
-        onClick={() => toggleFAQ(3)}
-        className="border border-gray-200 rounded-xl p-6 hover:border-primary/50 transition cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-lg text-textDark">
-            How can I support the Shoova Initiative?
-          </h3>
+            </div>
 
-          <ChevronDown
-            className={`w-5 h-5 transition-transform ${
-              openFAQ === 3 ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+          </div>
 
-        {openFAQ === 3 && (
-          <p className="text-text mt-4">
-            You can support Shoova by sponsoring student training,
-            funding land restoration work, partnering as an institution,
-            or sharing the mission with others who care about sustainable
-            development and environmental restoration.
-          </p>
-        )}
-      </div>
+        </section>
+        {/* Frequently Asked Questions */}
+        <section id="frequently_asked_questions" className="py-24 bg-white">
 
-      {/* FAQ 4 */}
-      <div
-        onClick={() => toggleFAQ(4)}
-        className="border border-gray-200 rounded-xl p-6 hover:border-primary/50 transition cursor-pointer"
-      >
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-lg text-textDark">
-            Is Shoova Initiative a registered nonprofit?
-          </h3>
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <ChevronDown
-            className={`w-5 h-5 transition-transform ${
-              openFAQ === 4 ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+            <h2 className="text-3xl font-heading font-bold text-textDark text-center mb-12">
+              Frequently Asked Questions
+            </h2>
 
-        {openFAQ === 4 && (
-          <p className="text-text mt-4">
-            Shoova Initiative is currently progressing through nonprofit
-            registration processes while establishing governance
-            structures and operational systems in both the United States
-            and Ghana.
-          </p>
-        )}
-      </div>
+            <div className="space-y-4">
 
-    </div>
+              {faqs.map((faq, index) => (
 
-  </div>
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-xl overflow-hidden"
+                >
 
-</section>
+                  {/* Question */}
+                  <button
+                    onClick={() => toggleFAQ(index)}
+                    className="w-full flex justify-between items-center text-left p-6 hover:bg-gray-50 transition"
+                  >
+
+                    <span className="font-bold text-lg text-textDark">
+                      {faq.question}
+                    </span>
+
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform duration-300 ${openIndex === index ? "rotate-180 text-primary" : "text-gray-400"
+                        }`}
+                    />
+
+                  </button>
+
+                  {/* Answer */}
+                  <div
+                    className={`transition-all duration-300 overflow-hidden ${openIndex === index ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <p className="px-6 pb-6 text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+        {/* Join the Restoration */}
+        <section className="py-24 bg-primary text-white text-center">
+
+          <div className="max-w-3xl mx-auto px-6">
+
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+              Join the Restoration
+            </h2>
+
+            <p className="text-lg text-teal-100 mb-10 leading-relaxed">
+              The future of Ghana’s land and communities depends on bold action.
+              Join the Shoova Initiative in transforming scars of destruction into
+              a movement of restoration, innovation, and opportunity.
+            </p>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-6">
+
+              <Link
+                to="/donate"
+                className="bg-secondary hover:bg-secondaryHover text-white px-8 py-4 rounded-full font-semibold transition shadow-lg"
+              >
+                Sponsor a Future Architect
+              </Link>
+
+              <Link
+                to="/contact"
+                className="border border-white/40 px-8 py-4 rounded-full hover:bg-white hover:text-primary transition"
+              >
+                Partner With Us
+              </Link>
+
+            </div>
+
+          </div>
+
+        </section>
       </>
     </div>
   );
