@@ -4,6 +4,20 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Donation from "./models/Donation.js";
+import Settings from "./models/Settings.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import Admin from "./models/Admin.js";
+import { sendReceipt } from "./utils/sendReceipt.js";
+import path from "path";
+import fs from "fs";
+import generateDonationNumber from "./utils/generateDonationNumber.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
+import { sendImmediateImpactEmail } from "./utils/sendImmediateImpactEmail.js";
+import "./jobs/emailSequence.js";
+import newsletterSendRoutes from "./routes/newsletterSend.js";
+import draftRoutes from "./routes/draftRoutes.js";
+import engagementRoutes from "./routes/engagementRoutes.js";
 
 dotenv.config();
 
@@ -56,33 +70,62 @@ app.post(
           return res.json({ received: true });
         }
 
+
+        const donationNumber = await generateDonationNumber();
+
         const donation = new Donation({
 
-          // Donor identity
-          name: session.customer_details?.name,
-          email: session.customer_details?.email,
+          donationNumber,
 
-          // Donation data
+          name: session.customer_details?.name || "Friend",
+          email: session.customer_details?.email
+            ? session.customer_details.email.toLowerCase().trim()
+            : null,
+
           amount: session.amount_total / 100,
           donationType: session.mode,
           currency: session.currency,
 
-          // Stripe identifiers
           stripeSessionId: session.id,
           stripeCustomerId: session.customer,
           stripeSubscriptionId: session.subscription,
 
           paymentStatus: session.payment_status,
 
-          // Location
           country: session.customer_details?.address?.country,
           city: session.customer_details?.address?.city,
 
-          source: "website"
+          source: "website",
 
+          emailSequenceStage: 1
         });
 
         const savedDonation = await donation.save();
+        try {
+          const previousDonations = await Donation.countDocuments({
+            email: savedDonation.email
+          });
+
+          if (savedDonation.email && previousDonations === 1) {
+            await sendImmediateImpactEmail(
+              savedDonation.name,
+              savedDonation.email,
+              savedDonation.amount,
+              savedDonation.city,
+              savedDonation.country
+            );
+          }
+        } catch (err) {
+          console.log("Email failed but donation saved", err);
+        }
+
+        await sendReceipt(
+          savedDonation.email,
+          savedDonation.amount,
+          savedDonation.donationNumber
+        );
+
+        console.log("📧 Receipt email sent");
 
         console.log("🎉 Donation saved to database!");
         console.log(savedDonation);
@@ -239,6 +282,20 @@ app.get("/admin/donors", async (req, res) => {
   }
 });
 
+app.get("/admin/recent-donations", async (req, res) => {
+  try {
+    const recent = await Donation.find()
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select("name email amount country donationType createdAt");
+
+    res.json(recent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Recent donations fetch error" });
+  }
+});
+
 app.get("/admin/analytics", async (req, res) => {
   try {
 
@@ -301,7 +358,187 @@ app.get("/admin/analytics", async (req, res) => {
   }
 });
 
+app.get("/admin/settings", async (req, res) => {
+
+  let settings = await Settings.findOne();
+
+  if (!settings) {
+
+    settings = await Settings.create({
+      organizationName: "Shoova Restoration Initiative",
+      contactEmail: "info@shoova.org",
+      currency: "USD",
+      donationTiers: [25, 100, 500, 1000, 2500, 5000]
+    });
+
+  }
+
+  res.json(settings);
+
+});
+
+app.post("/admin/settings", async (req, res) => {
+
+  try {
+
+    const settings = await Settings.findOneAndUpdate(
+      {},
+      req.body,
+      { returnDocument: "after", upsert: true }
+    );
+
+    res.json(settings);
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: "Settings update failed" });
+
+  }
+
+});
 
 
+app.post("/admin/login", async (req, res) => {
+
+  try {
+
+    const { email, password } = req.body;
+
+    const admin = await Admin.findOne({ email });
+
+    if (!admin) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const validPassword = await bcrypt.compare(password, admin.password);
+
+    if (!validPassword) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { adminId: admin._id, email: admin.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ token, email: admin.email });
+
+  } catch (error) {
+
+    console.error("Login error:", error);
+
+    res.status(500).json({ error: "Server error" });
+
+  }
+
+});
+
+
+
+app.get("/admin/receipt/:id", async (req, res) => {
+
+  try {
+
+    let donation = await Donation.findById(req.params.id);
+
+    if (!donation) {
+      donation = await Donation.findOne({ donationNumber: req.params.id });
+    }
+
+    if (!donation) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+
+    const receiptPath = path.join(
+      process.cwd(),
+      "receipts",
+      `receipt-${donation.donationNumber}.pdf`
+    );
+
+    if (!fs.existsSync(receiptPath)) {
+      return res.status(404).json({ error: "Receipt not found" });
+    }
+
+    res.download(receiptPath);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Download failed" });
+  }
+
+});
+
+app.post("/admin/resend-receipt/:id", async (req, res) => {
+
+  try {
+
+    let donation = await Donation.findById(req.params.id);
+
+    if (!donation) {
+      donation = await Donation.findOne({ donationNumber: req.params.id });
+    }
+
+    if (!donation) {
+      return res.status(404).json({ error: "Donation not found" });
+    }
+
+    await sendReceipt(
+      donation.email,
+      donation.amount,
+      donation.donationNumber
+    );
+
+    res.json({ success: true });
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ error: "Resend failed" });
+
+  }
+
+});
+
+app.get("/admin/donor/:email", async (req, res) => {
+
+  try {
+
+    const email = req.params.email;
+
+    const donations = await Donation.find({ email })
+      .sort({ createdAt: -1 });
+
+    const stats = await Donation.aggregate([
+      { $match: { email } },
+      {
+        $group: {
+          _id: "$email",
+          totalDonated: { $sum: "$amount" },
+          donationsCount: { $sum: 1 },
+          firstDonation: { $min: "$createdAt" },
+          lastDonation: { $max: "$createdAt" }
+        }
+      }
+    ]);
+
+    res.json({
+      donor: stats[0],
+      donations
+    });
+
+  } catch (error) {
+
+    res.status(500).json({ error: "Donor fetch error" });
+
+  }
+
+});
+app.use("/newsletter-send", newsletterSendRoutes);
+
+app.use("/newsletter", newsletterRoutes);
+app.use("/draft", draftRoutes);
+app.use("/engagement", engagementRoutes);
 
 app.listen(5000, () => console.log("Server running on port 5000"));

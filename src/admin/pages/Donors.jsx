@@ -47,8 +47,13 @@ export default function Donors() {
 
                 <tr key={d._id} className="border-b hover:bg-gray-50">
 
-                  <td className="py-4 font-medium">
-                    {d.name || "Anonymous"}
+                  <td className="py-4">
+                    <a
+                      href={`/admin/donor/${d._id}`}
+                      className="text-green-700 font-semibold hover:underline"
+                    >
+                      {d.name || "Anonymous"}
+                    </a>
                   </td>
 
                   <td>

@@ -16,6 +16,11 @@ import Dashboard from "./admin/pages/Dashboard";
 import Donations from "./admin/pages/Donations";
 import Donors from "./admin/pages/Donors";
 import Analytics from "./admin/pages/Analytics";
+import Settings from "./admin/pages/Settings";
+import Login from "./admin/pages/Login";
+import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
+import DonorProfile from "./admin/pages/DonorProfile";
+import Newsletter from "./admin/pages/Newsletter";
 
 const App = () => {
   return (
@@ -37,13 +42,24 @@ const App = () => {
         </Route>
 
         {/* ADMIN DASHBOARD ROUTES */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<Login />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminLayout />
+            </ProtectedAdminRoute>
+          }
+        >
 
           <Route index element={<Dashboard />} />
 
           <Route path="donations" element={<Donations />} />
           <Route path="donors" element={<Donors />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="donor/:email" element={<DonorProfile />} />
+          <Route path="/admin/newsletter" element={<Newsletter />} />
 
         </Route>
 

@@ -16,3 +16,18 @@ body {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
+
+.shoova-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: shoovaSpin 0.7s linear infinite;
+}
+
+@keyframes shoovaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

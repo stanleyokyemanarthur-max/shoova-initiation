@@ -13,11 +13,82 @@ import { Menu } from 'lucide-react';
 import { Text } from '../components/Text';
 import { Facebook, Twitter, Instagram, Youtube, Share2 } from "lucide-react";
 import { motion } from "framer-motion"
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 
 export const IndexPage = ({ className, children, variant, contentKey, ...props }) => {
+  const [birthday, setBirthday] = useState(null);
+  const [subscribed, setSubscribed] = useState(false);
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    birthdayMonth: "",
+    birthdayDay: "",
+    birthdayYear: "",
+    birthdayReminder: false
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value
+    });
+  };
+
+  const handleSubscribe = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      const res = await fetch("http://localhost:5000/newsletter/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...formData,
+          birthday: birthday ? birthday.toISOString() : null
+        })
+      });
+
+      const data = await res.json();
+
+      console.log("SERVER RESPONSE:", data);
+
+      if (data.success) {
+        setSubscribed(true);
+
+        // clear form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          birthdayMonth: "",
+          birthdayDay: "",
+          birthdayYear: "",
+          birthdayReminder: false
+        });
+
+        setBirthday(null);
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+    } catch (error) {
+
+      console.error("Subscription failed:", error);
+
+    }
+
+  };
+
   const impactTabs = [
     {
       id: "environment",
@@ -57,6 +128,22 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
   return (
 
     <div className="font-body antialiased">
+      {subscribed && (
+        <div className="fixed top-0 left-0 w-full bg-primary text-white py-4 px-6 flex justify-between items-center z-[9999] shadow-lg">
+
+          <p className="text-sm md:text-base">
+            You're signed up! You'll now receive Shoova restoration updates.
+          </p>
+
+          <button
+            onClick={() => setSubscribed(false)}
+            className="text-white text-xl font-bold"
+          >
+            ×
+          </button>
+
+        </div>
+      )}
       <>
         {/* Hero Section */}
         <section
@@ -67,11 +154,10 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
           <div className="absolute inset-0">
             <video
               autoPlay
-              scale-110
               muted
               loop
               playsInline
-              className="w-full h-full transition-transform duration-[8000ms] object-cover scale-105"
+              className="w-full scale-110 h-full transition-transform duration-[8000ms] object-cover"
             >
               <source src="/img/planting.mp4" type="video/mp4" />
             </video>
@@ -417,6 +503,280 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
             </div>
           </div>
         </section>
+
+        {/* Restoration Report */}
+        <section
+          id="restoration_report"
+          className="py-24 bg-white border-t border-gray-100"
+        >
+          <div className="max-w-7xl mx-auto px-6">
+
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+              {/* LEFT SIDE — EMOTIONAL IMAGE */}
+              <div className="relative">
+
+                <img
+                  src="/img/gh12.jpg"
+                  alt="Youth restoring degraded land in Ghana"
+                  className="w-full h-[520px] object-cover rounded-2xl shadow-xl"
+                />
+
+                {/* Caption Overlay */}
+                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur px-6 py-4 rounded-xl shadow-lg max-w-xs">
+                  <p className="text-sm text-gray-700 font-medium">
+                    Youth restoring degraded land in Ghana’s Eastern Region through the
+                    Shoova Restoration Initiative.
+                  </p>
+                </div>
+
+              </div>
+
+
+              {/* RIGHT SIDE — FORM */}
+              <form onSubmit={handleSubscribe}
+                className="bg-[#f7f7f7] p-10 rounded-2xl shadow-sm space-y-6">
+
+                {/* Heading */}
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-textDark mb-3">
+                    Subscribe to the Shoova Restoration Report
+                  </h2>
+
+                  <p className="text-lg text-text leading-relaxed">
+                    Receive updates on land restoration, youth training, and the progress of the Shoova Restoration Campus.
+                  </p>
+                </div>
+
+
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-4">
+
+                  <div>
+                    <label className="block text-xs font-semibold tracking-wide mb-2">
+                      FIRST NAME
+                    </label>
+
+                    <input
+                      type="text"
+                      placeholder="First name"
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold tracking-wide mb-2">
+                      LAST NAME
+                    </label>
+
+                    <input
+                      type="text"
+                      placeholder="Last name"
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                    />
+                  </div>
+
+                </div>
+
+
+                {/* Email */}
+                <div>
+
+                  <label className="block text-xs font-semibold tracking-wide mb-2">
+                    EMAIL
+                  </label>
+
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                  />
+
+                </div>
+
+
+                {/* Birthday */}
+                <div>
+
+                  <label className="block text-xs font-semibold tracking-wide mb-2">
+                    BIRTHDAY (OPTIONAL)
+                  </label>
+
+                  <DatePicker
+                    selected={birthday}
+                    onChange={(date) => setBirthday(date)}
+                    dateFormat="MMMM d, yyyy"
+                    showYearDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={80}
+                    maxDate={new Date()}
+                    placeholderText="Select your birthday"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+
+                </div>
+
+
+                {/* Birthday Reminder Checkbox */}
+                <div className="flex items-start gap-3">
+
+                  <input
+                    type="checkbox"
+                    name="birthdayReminder"
+                    checked={formData.birthdayReminder}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        birthdayReminder: e.target.checked
+                      })
+                    }
+                    className="mt-1"
+                  />
+
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    Set a reminder to pledge my birthday and help restore land and
+                    empower communities.
+                  </p>
+
+                </div>
+
+
+                {/* Subscribe Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-secondary hover:bg-secondaryHover text-white font-semibold py-4 rounded-md transition shadow-md"
+                >
+                  Keep Me Informed
+                </button>
+
+
+                {/* Privacy / reCAPTCHA */}
+                <p className="text-xs text-gray-500 leading-relaxed">
+
+                  By clicking “Subscribe”, you agree to receive updates from the
+                  Shoova Restoration Initiative.
+
+                  <br /><br />
+
+                  This site is protected by reCAPTCHA and the Google
+                  Privacy Policy and Terms of Service apply.
+
+                </p>
+
+              </form>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* Share the Story */}
+        <section id="share_the_story" className="py-24 bg-background border-t border-gray-100">
+          <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Image Side */}
+            <div className="relative">
+              <img
+                src="/img/share.jpg"
+                alt="Illegal mining destruction in Ghana"
+                className="rounded-2xl shadow-xl w-full h-[420px] object-cover"
+              />
+
+            </div>
+
+            {/* Content */}
+            <div>
+
+              <p className="text-secondary font-bold tracking-wider uppercase text-sm mb-4">
+                Share the Story
+              </p>
+
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mb-6">
+                From Galamsey to Growth
+              </h2>
+
+              <p className="text-lg text-text leading-relaxed mb-8">
+                The destruction caused by illegal mining is one of the most urgent
+                environmental crises facing Ghana today. But restoration is possible.
+                Help more people understand the challenge — and the solution — by
+                sharing the Shoova restoration story.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+
+                {/* 📄 FACT SHEET */}
+                <button
+                  onClick={() => {
+                    // track download
+                    fetch("http://localhost:5000/engagement/track-download", {
+                      method: "POST"
+                    });
+
+                    // force open in new tab
+                    window.open("/docs/galamsey-to-growth.pdf", "_blank");
+                  }}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-secondary hover:bg-secondaryHover text-white font-semibold rounded-full transition shadow-lg"
+                >
+                  Download Fact Sheet
+                </button>
+
+                {/* 🔁 SHARE */}
+                <button
+
+                  onClick={async () => {
+                    const url = window.location.origin + "#share_the_story";
+
+                    const text =
+                      "Galamsey is destroying lands across Ghana.\n\n" +
+                      "Shoova is restoring these ecosystems and communities.\n\n" +
+                      "Learn more:";
+
+                    try {
+                      if (navigator.share) {
+                        await navigator.share({
+                          title: "Shoova Restoration Initiative",
+                          text,
+                          url,
+                        });
+                      } else {
+                        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+                        window.open(whatsappUrl, "_blank");
+                      }
+                    } catch (err) {
+                      console.warn("Share cancelled or failed:", err);
+                      // optional fallback
+                      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+                      window.open(whatsappUrl, "_blank");
+                    }
+                  }}
+                  className="inline-flex items-center justify-center px-8 py-4 border border-primary text-primary font-semibold rounded-full hover:bg-primary hover:text-white transition"
+                >
+                  Share With Your Network
+                </button>
+
+              </div>
+
+              <p className="text-sm text-gray-500 mt-6">
+                Community awareness is the first step toward environmental restoration.
+              </p>
+
+            </div>
+
+          </div>
+        </section>
+
         {/* Meet the People Behind the Restoration */}
         <section id="meet_the_team" className="py-24 bg-primary text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>

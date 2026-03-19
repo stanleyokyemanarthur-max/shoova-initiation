@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const donationSchema = new mongoose.Schema({
 
+  donationNumber: {
+    type: String,
+    unique: true
+  },
+
   // Donor Identity
   name: String,
   email: {
@@ -49,6 +54,15 @@ const donationSchema = new mongoose.Schema({
   source: {
     type: String,
     default: "website"
+  },
+  emailSequenceStage: {
+    type: Number,
+    default: 1
+  },
+
+  donationDate: {
+    type: Date,
+    default: Date.now
   },
 
   // Timestamp

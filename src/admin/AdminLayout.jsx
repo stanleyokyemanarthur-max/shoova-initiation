@@ -10,6 +10,13 @@ import {
 } from "lucide-react";
 
 export default function AdminLayout() {
+  const adminEmail = localStorage.getItem("adminEmail");
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminEmail");
+    window.location.href = "/admin/login";
+  };
   return (
     <div className="min-h-screen flex bg-gray-100">
 
@@ -60,6 +67,11 @@ export default function AdminLayout() {
             <BarChart3 size={20} />
             Analytics
           </Link>
+          <Link
+            to="/admin/newsletter"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition">
+              Newsletter
+          </Link>
 
           <Link
             to="/admin/settings"
@@ -73,8 +85,10 @@ export default function AdminLayout() {
 
         {/* Logout */}
         <div className="p-6 border-t border-white/10">
-          <button className="flex items-center gap-3 text-red-400 hover:text-red-300">
-            <LogOut size={18} />
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 text-red-400 hover:text-red-300"
+          >
             Logout
           </button>
         </div>
@@ -88,22 +102,27 @@ export default function AdminLayout() {
         <header className="bg-white border-b px-10 py-4 flex justify-between items-center">
 
           <h2 className="text-xl font-semibold text-gray-800">
-            Shoova Admin Panel
+            Shoova Restoration Initiative
+            Admin Console
           </h2>
 
           {/* Admin Info */}
-          <div className="flex items-center gap-4">
+          <div className="flex cursor-default items-center gap-4">
 
             <div className="text-right">
               <p className="text-sm font-semibold text-gray-800">
                 Admin User
               </p>
-              <p className="text-xs text-gray-500">
-                admin@shoova.org
+              <p className="text-sm font-semibold text-gray-800">
+                {adminEmail}
               </p>
             </div>
 
-            <div className="w-10 h-10 rounded-full bg-gray-300" />
+            <img
+              src="/img/logoo.png"
+              alt="Shoova"
+              className="w-10 h-10 rounded-full object-cover"
+            />
 
           </div>
 
