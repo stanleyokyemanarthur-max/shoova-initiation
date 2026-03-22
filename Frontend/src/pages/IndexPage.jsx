@@ -48,7 +48,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
     try {
 
-      const res = await fetch("http://localhost:5000/newsletter/subscribe", {
+      const res = await fetch("https://shoova-initiation.onrender.com/newsletter/subscribe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
