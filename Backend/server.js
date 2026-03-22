@@ -1,7 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import Stripe from "stripe";
 import cors from "cors";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Donation from "./models/Donation.js";
 import Settings from "./models/Settings.js";
@@ -18,8 +19,9 @@ import "./jobs/emailSequence.js";
 import newsletterSendRoutes from "./routes/newsletterSend.js";
 import draftRoutes from "./routes/draftRoutes.js";
 import engagementRoutes from "./routes/engagementRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
-dotenv.config();
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
@@ -70,6 +72,21 @@ app.post(
           return res.json({ received: true });
         }
 
+        const addressObj = session.customer_details?.address;
+
+        const fullAddress = addressObj
+          ? [
+            addressObj.line1,
+            addressObj.line2,
+            addressObj.city,
+            addressObj.state,
+            addressObj.postal_code,
+            addressObj.country
+          ]
+            .filter(Boolean)
+            .join(", ")
+          : "N/A";
+
 
         const donationNumber = await generateDonationNumber();
 
@@ -92,8 +109,10 @@ app.post(
 
           paymentStatus: session.payment_status,
 
-          country: session.customer_details?.address?.country,
-          city: session.customer_details?.address?.city,
+          address: fullAddress, // ✅ ADD THIS
+
+          country: addressObj?.country,
+          city: addressObj?.city,
 
           source: "website",
 
@@ -119,11 +138,13 @@ app.post(
           console.log("Email failed but donation saved", err);
         }
 
-        await sendReceipt(
-          savedDonation.email,
-          savedDonation.amount,
-          savedDonation.donationNumber
-        );
+        await sendReceipt({
+          email: savedDonation.email,
+          amount: savedDonation.amount,
+          donationId: savedDonation.donationNumber,
+          name: savedDonation.name,
+          address: savedDonation.address // ✅ CRITICAL
+        });
 
         console.log("📧 Receipt email sent");
 
@@ -158,6 +179,7 @@ app.post("/create-checkout-session", async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
+      billing_address_collection: "required", 
       mode: donationType === "monthly" ? "subscription" : "payment",
 
       line_items: [
@@ -177,7 +199,7 @@ app.post("/create-checkout-session", async (req, res) => {
         },
       ],
 
-      success_url: "http://localhost:3000/success",
+      success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:3000/donate",
     });
 
@@ -186,6 +208,23 @@ app.post("/create-checkout-session", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Stripe session error" });
+  }
+});
+
+app.get("/api/verify-session/:id", async (req, res) => {
+  try {
+    const donation = await Donation.findOne({
+      stripeSessionId: req.params.id,
+      paymentStatus: "paid",
+    });
+
+    if (!donation) {
+      return res.json({ success: false });
+    }
+
+    res.json({ success: true, donation });
+  } catch (err) {
+    res.status(500).json({ success: false });
   }
 });
 
@@ -487,9 +526,10 @@ app.post("/admin/resend-receipt/:id", async (req, res) => {
     await sendReceipt(
       donation.email,
       donation.amount,
-      donation.donationNumber
+      donation.donationNumber,
+      donation.name
     );
-
+    console.log("ACTUAL OBJECT USED:", donation);
     res.json({ success: true });
 
   } catch (error) {
@@ -540,5 +580,7 @@ app.use("/newsletter-send", newsletterSendRoutes);
 app.use("/newsletter", newsletterRoutes);
 app.use("/draft", draftRoutes);
 app.use("/engagement", engagementRoutes);
+app.use("/api", contactRoutes);
+
 
 app.listen(5000, () => console.log("Server running on port 5000"));

@@ -1,8 +1,8 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from '../components/Badge';
 import { Heart } from 'lucide-react';
@@ -15,10 +15,11 @@ import { Facebook, Twitter, Instagram, Youtube, Share2 } from "lucide-react";
 import { motion } from "framer-motion"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import CountUp from "../components/CountUp"
 
 
 export const IndexPage = ({ className, children, variant, contentKey, ...props }) => {
+
   const [birthday, setBirthday] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
 
@@ -124,10 +125,73 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
     },
   ];
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!videoRef.current) return;
+
+      const scrollY = window.scrollY;
+
+      // Move video slower than scroll → parallax effect
+      videoRef.current.style.transform = `translateY(${scrollY * 0.3}px) scale(1.1)`;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const [activeImpact, setActiveImpact] = useState(impactTabs[0]);
+
+
+
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.25
+      }
+    }
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 50 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.9,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const fadeLeft = {
+    hidden: { opacity: 0, x: -60 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 1,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const fadeRight = {
+    hidden: { opacity: 0, x: 60 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 1,
+        ease: "easeOut"
+      }
+    }
+  };
   return (
 
-    <div className="font-body antialiased">
+    <div className="font-body cursor-default antialiased">
       {subscribed && (
         <div className="fixed top-0 left-0 w-full bg-primary text-white py-4 px-6 flex justify-between items-center z-[9999] shadow-lg">
 
@@ -146,172 +210,396 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
       )}
       <>
         {/* Hero Section */}
-        <section
+        <motion.section
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+
           id="hero"
-          className="relative h-screen  w-full flex items-center justify-center text-center overflow-hidden"
+          className="relative h-screen w-full flex items-center overflow-hidden"
         >
           {/* Background Video */}
           <div className="absolute inset-0">
             <video
+              ref={videoRef}
               autoPlay
               muted
               loop
               playsInline
-              className="w-full scale-110 h-full transition-transform duration-[8000ms] object-cover"
+              className="w-full h-full object-cover scale-110"
             >
               <source src="/img/planting.mp4" type="video/mp4" />
             </video>
           </div>
 
-          {/* Cinematic Overlays */}
-          <div className="absolute inset-0 bg-black/40"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.45)_75%,rgba(0,0,0,0.72)_100%)]"></div>
+          {/* Overlays */}
+          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
 
-          {/* Content */}
-          <div className="relative z-10 max-w-4xl px-6 text-white">
-            {/* <Badge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md text-white font-medium text-sm mb-6 border border-white/20">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              Over 50,000 lives impacted this year
-            </Badge> */}
+          {/* CONTENT */}
+          <div className="relative z-10 max-w-6xl mx-auto w-full px-6 md:px-10">
+            <div className="max-w-lg text-left text-white">
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 leading-tight"
-            >
-              Restoring Lives.
-              <br />
-              <span className="text-secondary italic">Restoring Lands</span>
-            </motion.h1>
+              {/* 🔥 HEADLINE (TIGHT STACKED BLOCKS) */}
+              <div className="flex flex-col items-start leading-none  mb-4">
 
-            <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-              Shoova Initiative is building a restoration movement in Ghana’s Eastern Region by equipping youth with technical skills, ethical leadership, and environmental stewardship to heal scarred lands and reclaim the future.
-            </p>
+                <div className="bg-white text-black px-4 py-2 rounded-sm shadow">
+                  <span className="text-2xl md:text-4xl lg:text-5xl font-bold">
+                    Halt Galamsey,
+                  </span>
+                </div>
+                <div className="bg-white px-4 ml-10 py-2 rounded-sm shadow">
 
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <span className="text-2xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    Heal the Land.
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="mb-6">
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-wide">
+                  ONE STUDENT <br /> AT A TIME
+                </h2>
+
+                <p className="mt-4 text-white/80 text-sm md:text-base max-w-sm">
+                  Building the Shoova Restoration Campus in Ghana.
+                </p>
+              </div>
+
+              {/* 🔥 CTA (MATCHED TO DESIGN SYSTEM) */}
               <Link
                 to="/donate"
-                className="px-8 py-4 bg-secondary hover:bg-secondaryHover text-white font-bold rounded-full text-lg transition shadow-xl"
+                className="inline-flex items-center gap-2 bg-secondary hover:bg-secondaryHover text-white px-6 py-3 rounded-sm font-bold text-sm md:text-base tracking-wide transition shadow-md active:scale-[0.97]"
               >
-                Join the Restoration
+                Donate Now
+                <span className="text-lg">→</span>
               </Link>
 
-              <Link
-                to="/programs"
-                className="px-8 py-4 border border-white/70 hover:bg-white hover:text-black rounded-full font-semibold text-lg transition flex items-center justify-center gap-2"
-              >
-                View Our Work
-                <ArrowRight className="w-5 h-5" />
-              </Link>
             </div>
           </div>
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce">
+
+          {/* SCROLL INDICATOR */}
+          <div className="absolute bottom-8 left-10 text-white/70 animate-bounce">
             ↓
           </div>
-        </section>
-        {/* Restoration Process */}
-        <section id="restoration_process" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        </motion.section>
+
+        <motion.section
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="py-28 bg-gray-50 relative overflow-hidden"
+        >
+
+          {/* BACKGROUND */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
+            className="absolute left-0 top-0 w-1/2 h-full -skew-x-12 origin-top-left"
+          />
+
+          <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center gap-16 relative z-10">
+
+            {/* IMAGE */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-center mb-14"
+              variants={fadeLeft}
+              className="relative flex justify-center md:justify-start"
             >
-              <p className="text-secondary font-bold tracking-wider uppercase text-sm mb-3">
-                How the Movement Works
+              <div className="relative">
+
+                <motion.img
+                  src="/img/remove.png"
+                  alt="Shoova Founder"
+                  className="w-[340px] md:w-[420px] object-contain drop-shadow-2xl"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1 }}
+                />
+
+                {/* glow */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 1 }}
+                  className="absolute inset-0 bg-secondary/10 blur-3xl -z-10"
+                />
+              </div>
+            </motion.div>
+
+            {/* TEXT */}
+            <motion.div variants={fadeRight} className="max-w-xl">
+
+              {/* label */}
+              <motion.p
+                variants={fadeUp}
+                className="text-sm uppercase tracking-widest text-secondary font-semibold mb-4"
+              >
+                Founder’s Message
+              </motion.p>
+
+              {/* quote */}
+              <motion.div
+                variants={fadeUp}
+                className="relative pl-6 mb-8"
+              >
+                <span className="absolute left-0 top-0 text-4xl text-secondary/30 leading-none">
+                  “
+                </span>
+
+                <p className="text-2xl md:text-3xl font-semibold text-gray-900 leading-snug mb-4">
+                  For years, our professional lives were defined by the language of the
+                  corporate world, portfolio management, accounting precision, and strategic scaling.
+                </p>
+
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  We built careers centered on optimization and efficiency. But as we looked at the
+                  landscape of the Eastern Region in Ghana, we saw a different kind of "portfolio"
+                  that was in desperate need of a turnaround.
+                </p>
+
+                <span className="text-secondary/30 text-3xl ml-1">”</span>
+              </motion.div>
+
+              {/* NAME */}
+              <motion.h2
+                variants={fadeUp}
+                transition={{ delay: 0.2 }}
+                className="text-gray-800 font-medium"
+              >
+                <span className="font-semibold">William Agyekum</span>
+                <span className="text-gray-500">, Founder, Shoova Initiative</span>
+              </motion.h2>
+
+            </motion.div>
+
+          </div>
+        </motion.section>
+
+        <section className="relative w-full h-screen flex items-center overflow-hidden">
+
+          {/* PARALLAX BACKGROUND */}
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
+            style={{ backgroundImage: "url('/img/galamsey.jpg')" }}
+          ></div>
+
+          {/* OVERLAYS */}
+          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-transparent"></div>
+
+          {/* CONTENT */}
+          <div className="relative z-10 px-6 md:px-16 lg:px-24 w-full">
+            <div className="max-w-md text-white">
+
+              {/* OPTIONAL LABEL */}
+              <p className="text-secondary font-semibold uppercase tracking-widest text-sm mb-4">
+                The Problem of Galamsey
               </p>
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mb-4">
-                The Restoration Process
+
+              {/* HEADLINE */}
+              <h2 className="text-4xl md:text-6xl font-extrabold leading-[1.05] mb-6 tracking-tight">
+                Become a regular giver <br />
+                and <span className="text-secondary">restore lives beyond galamsey.</span>
               </h2>
-              <p className="text-text text-lg max-w-2xl mx-auto">
-                Shoova Initiative is building a pathway from environmental destruction to
-                community renewal through a three-step model: reclaim, train, and restore.
+
+              <p className="text-base md:text-lg text-white/85 leading-relaxed mb-10 space-y-4">
+                Ghana is facing an ecological and humanitarian crisis.
+                Illegal mining has poisoned water sources, destroyed forests, and trapped thousands of young people in dangerous, low-paying work.
+              </p>
+
+              {/* CTA */}
+              <button className="bg-secondary hover:bg-secondaryHover text-white px-8 py-3.5 font-bold text-sm tracking-wide uppercase rounded-md transition shadow-lg">
+                Donate
+              </button>
+
+            </div>
+          </div>
+
+        </section>
+
+        <motion.section
+          id="solution"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="py-28 bg-gray-50"
+        >
+          <div className="max-w-7xl mx-auto px-6 md:px-10">
+
+            {/* HEADER */}
+            <motion.div
+              variants={fadeUp}
+              className="max-w-3xl mx-auto text-center"
+            >
+              <h2 className="text-4xl md:text-5xl lg:text-5xl font-heading font-bold text-textDark mb-6 leading-tight">
+                Shoova Restoration Campus
+              </h2>
+
+              <p className="text-text text-lg md:text-xl leading-relaxed">
+                We are building an 8-acre vocational institute dedicated to hands-on,
+                high-impact training that dignifies labor, equips youth with real skills,
+                and restores the environment.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* GRID */}
+            <motion.div
+              variants={container}
+              className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16"
+            >
+
+              {/* CARD 1 */}
               <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-                className="bg-background rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                variants={fadeUp}
+                className="flex flex-col items-center text-center max-w-sm mx-auto transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="h-60 overflow-hidden">
-                  <img
-                    src="/img/recliam.jpg"
-                    alt="Land assessment and reclamation"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-primary mb-6">
+                  <img src="/img/school.png" alt="" className="w-8 h-8" />
                 </div>
-                <div className="p-8 text-center">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+
+                <h3 className="text-2xl font-heading font-bold text-textDark mb-4">
+                  School of Engineering & Fabrication
+                </h3>
+
+                <p className="text-text text-base leading-relaxed">
+                  Mastering the trades that build nations precision welding, heavy machinery repair,
+                  and metal fabrication. We turn raw talent into industrial expertise.
+                </p>
+              </motion.div>
+
+              {/* CARD 2 */}
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-col items-center text-center max-w-sm mx-auto transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-primary mb-6">
+                  <img src="/img/school.png" alt="" className="w-8 h-8" />
+                </div>
+
+                <h3 className="text-2xl font-heading font-bold text-textDark mb-4">
+                  School of Sustainable Futures
+                </h3>
+
+                <p className="text-text text-base leading-relaxed">
+                  Leading the green transition through solar installation, land reclamation,
+                  and sustainable agriculture equipping youth to restore and protect ecosystems.
+                </p>
+              </motion.div>
+
+              {/* CARD 3 */}
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-col items-center text-center max-w-sm mx-auto transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-primary mb-6">
+                  <img src="/img/school.png" alt="" className="w-8 h-8" />
+                </div>
+
+                <h3 className="text-2xl font-heading font-bold text-textDark mb-4">
+                  School of Ethical Leadership
+                </h3>
+
+                <p className="text-text text-base leading-relaxed">
+                  Training in business, data-driven management, and cooperative ethics so graduates
+                  don’t just find jobs, but create opportunities for others.
+                </p>
+              </motion.div>
+
+            </motion.div>
+
+          </div>
+        </motion.section>
+        {/* ================= OUR PROCESS ================= */}
+        <section className="relative bg-white pt-24 pb-10">
+
+          {/* HEADER */}
+          <div className="text-center mb-12 md:mb-16 px-6">
+
+            <p className="text-sm uppercase tracking-[0.25em] text-secondary/80 mb-4">
+              Our Process
+            </p>
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-textDark mb-4 leading-tight">
+              Turning destruction into restoration
+            </h2>
+
+            <div className="w-16 h-[2px] bg-secondary mx-auto mb-32"></div>
+
+          </div>
+
+          {/* PROCESS CARD */}
+          <div className="relative -mt-16 md:-mt-20 mb-20 md:mb-28 px-6 md:px-10 z-20">
+
+            <div className="max-w-7xl mx-auto rounded-xl overflow-hidden shadow-2xl">
+
+              <div className="grid grid-cols-1 md:grid-cols-3">
+
+                {/* STEP 1 */}
+                <div className="bg-[#0f2f44] text-white px-8 py-28 flex flex-col justify-center hover:-translate-y-1 transition">
+
+                  <p className="text-md uppercase tracking-widest text-white/60 mb-3">
+                    Step 01
+                  </p>
+
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
                     Reclaim
                   </h3>
-                  <p className="text-text">
-                    We identify lands devastated by illegal mining, assess the damage, and
-                    engage local communities in the first steps toward environmental healing.
-                  </p>
-                </div>
-              </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
-                className="bg-background rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="h-60 overflow-hidden">
-                  <img
-                    src="/img/train.jpg"
-                    alt="Youth technical training"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                  <p className="text-white/80 text-md leading-relaxed">
+                    We identify lands devastated by illegal mining and engage local
+                    communities to begin environmental recovery.
+                  </p>
+
                 </div>
-                <div className="p-8 text-center">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+
+
+                {/* STEP 2 */}
+                <div className="bg-[#c9a96a] text-white px-8 py-28 flex flex-col justify-center hover:-translate-y-1 transition">
+
+                  <p className="text-md uppercase tracking-widest text-white/70 mb-3">
+                    Step 02
+                  </p>
+
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
                     Train
                   </h3>
-                  <p className="text-text">
-                    We equip youth from affected communities with world-class technical,
-                    environmental, and leadership skills that open dignified pathways beyond
-                    galamsey.
-                  </p>
-                </div>
-              </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-                className="bg-background rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="h-60 overflow-hidden">
-                  <img
-                    src="/img/restore.jpg"
-                    alt="Community restoration and renewal"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                  <p className="text-white/90 text-md leading-relaxed">
+                    We equip youth with engineering, environmental, and vocational
+                    skills that create real alternatives to galamsey.
+                  </p>
+
                 </div>
-                <div className="p-8 text-center">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
+
+
+                {/* STEP 3 */}
+                <div className="bg-[#d94a34] text-white px-8 py-28 flex flex-col justify-center hover:-translate-y-1 transition">
+
+                  <p className="text-md uppercase tracking-widest text-white/70 mb-3">
+                    Step 03
+                  </p>
+
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
                     Restore
                   </h3>
-                  <p className="text-text">
-                    Our graduates apply their skills to rebuild livelihoods, reclaim damaged
-                    land, and lead a future rooted in stewardship, innovation, and hope.
+
+                  <p className="text-white/90 text-md leading-relaxed">
+                    Our graduates rebuild ecosystems, restore livelihoods, and lead
+                    communities away from destructive mining practices.
                   </p>
+
                 </div>
-              </motion.div>
+
+              </div>
+
             </div>
           </div>
+
         </section>
 
         {/* Why This Movement Matters */}
@@ -402,143 +690,170 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
         </section>
 
 
-        {/* Impact Metrics */}
-        <section id="impact_metrics" className="py-24 bg-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <Text className="text-secondary font-bold tracking-wider uppercase text-sm">
-                Measuring Restoration
-              </Text>
-              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mt-2 mb-6">
-                Impact You Can Measure
-              </h2>
-              <p className="text-xl text-text max-w-3xl mx-auto">
-                Restoration is more than a vision — it is measurable change. Shoova
-                Initiative tracks the healing of land, water, and livelihoods to ensure
-                every effort creates lasting transformation.
+        <section id="impact" className="py-28 bg-white">
+
+          <div className="max-w-7xl mx-auto px-6 md:px-10">
+
+            {/* HEADER */}
+            <div className="text-center mb-20">
+
+              <p className="text-sm uppercase tracking-[0.25em] text-secondary/80 mb-4">
+                Projected Impact
               </p>
+
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-textDark mb-6">
+                The Impact We Are Building
+              </h2>
+
+              <p className="text-text text-lg max-w-2xl mx-auto">
+                With the establishment of the Shoova Restoration Campus, this is the
+                measurable transformation we are working toward across land, water, and livelihoods.
+              </p>
+
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Metric 1 */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src="/img/lands.jpg"
-                    alt="Restored land and environmental recovery"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
-                    LAND
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-                    Acres of Land Restored
-                  </h3>
-                  <p className="text-text mb-6">
-                    Tracking the physical recovery of landscapes damaged by illegal
-                    mining, from degraded soil to restored ecosystems capable of
-                    supporting life again.
-                  </p>
-                </div>
+
+            {/* IMPACT GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+              {/* LAND */}
+              <div className="bg-gray-50 rounded-2xl p-10 hover:shadow-xl transition">
+
+                <p className="text-xs uppercase tracking-widest text-primary mb-4">
+                  Land
+                </p>
+
+                <h3 className="text-5xl md:text-6xl font-bold text-textDark mb-4">
+                  <CountUp end={500} suffix="+" />
+                </h3>
+
+                <p className="text-lg font-semibold text-textDark mb-2">
+                  Acres Restored
+                </p>
+
+                <p className="text-text text-sm leading-relaxed">
+                  Restoring land damaged by illegal mining into thriving ecosystems
+                  capable of supporting communities and agriculture.
+                </p>
+
               </div>
 
-              {/* Metric 2 */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src="/img/waters.jpg"
-                    alt="River health and water quality monitoring"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-secondary">
-                    WATER
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-                    River Quality Index
-                  </h3>
-                  <p className="text-text mb-6">
-                    Monitoring improvements in water health, including the reduction of
-                    mercury, silt, and other pollutants affecting rivers and nearby
-                    communities.
-                  </p>
-                </div>
+
+              {/* WATER */}
+              <div className="bg-gray-50 rounded-2xl p-10 hover:shadow-xl transition">
+
+                <p className="text-xs uppercase tracking-widest text-secondary mb-4">
+                  Water
+                </p>
+
+                <h3 className="text-5xl md:text-6xl font-bold text-textDark mb-4">
+                  <CountUp end={65} suffix="%" />
+                </h3>
+
+                <p className="text-lg font-semibold text-textDark mb-2">
+                  Pollution Reduction
+                </p>
+
+                <p className="text-text text-sm leading-relaxed">
+                  Improving river systems through the reduction of mercury, silt,
+                  and harmful contaminants caused by illegal mining.
+                </p>
+
               </div>
 
-              {/* Metric 3 */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src="/img/repair.jpg"
-                    alt="Youth training and dignified livelihoods"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
-                    LIVELIHOODS
-                  </div>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-heading font-bold text-textDark mb-3">
-                    Dignified Livelihoods
-                  </h3>
-                  <p className="text-text mb-6">
-                    Measuring how many young people transition from dangerous mining
-                    work into skilled, sustainable, and dignified careers that rebuild
-                    both lives and communities.
-                  </p>
-                </div>
+
+              {/* PEOPLE */}
+              <div className="bg-gray-50 rounded-2xl p-10 hover:shadow-xl transition">
+
+                <p className="text-xs uppercase tracking-widest text-primary mb-4">
+                  People
+                </p>
+
+                <h3 className="text-5xl md:text-6xl font-bold text-textDark mb-4">
+                  <CountUp end={1200} suffix="+" />
+                </h3>
+
+                <p className="text-lg font-semibold text-textDark mb-2">
+                  Youth Empowered
+                </p>
+
+                <p className="text-text text-sm leading-relaxed">
+                  Transitioning young people from dangerous mining into skilled,
+                  dignified, and sustainable livelihoods.
+                </p>
+
               </div>
+
             </div>
 
+
+            {/* SMALL DISCLAIMER (VERY IMPORTANT) */}
+            <p className="text-center text-xs text-gray-500 mt-10 max-w-xl mx-auto">
+              Projected impact based on full implementation of the Shoova Restoration Campus.
+            </p>
+
+
+            {/* CTA */}
             <div className="text-center mt-12">
               <Link
-                to="/programs"
-                className="inline-block px-8 py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-colors"
+                to="/donate"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-white font-semibold rounded-full hover:bg-secondaryHover transition"
               >
-                Explore Our Impact
+                Support This Impact
+                <span>→</span>
               </Link>
             </div>
+
           </div>
+
         </section>
 
-        {/* Restoration Report */}
-        <section
+        <motion.section
           id="restoration_report"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
           className="py-24 bg-white border-t border-gray-100"
         >
           <div className="max-w-7xl mx-auto px-6">
 
             <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-              {/* LEFT SIDE — EMOTIONAL IMAGE */}
-              <div className="relative">
+              {/* IMAGE */}
+              <motion.div variants={fadeLeft} className="relative">
 
-                <img
+                <motion.img
                   src="/img/gh12.jpg"
                   alt="Youth restoring degraded land in Ghana"
                   className="w-full h-[520px] object-cover rounded-2xl shadow-xl"
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1 }}
                 />
 
-                {/* Caption Overlay */}
-                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur px-6 py-4 rounded-xl shadow-lg max-w-xs">
+                {/* Caption */}
+                <motion.div
+                  variants={fadeUp}
+                  className="absolute bottom-6 left-6 bg-white/90 backdrop-blur px-6 py-4 rounded-xl shadow-lg max-w-xs"
+                >
                   <p className="text-sm text-gray-700 font-medium">
                     Youth restoring degraded land in Ghana’s Eastern Region through the
                     Shoova Restoration Initiative.
                   </p>
-                </div>
+                </motion.div>
 
-              </div>
+              </motion.div>
 
-
-              {/* RIGHT SIDE — FORM */}
-              <form onSubmit={handleSubscribe}
-                className="bg-[#f7f7f7] p-10 rounded-2xl shadow-sm space-y-6">
+              {/* FORM */}
+              <motion.form
+                onSubmit={handleSubscribe}
+                variants={fadeRight}
+                className="bg-[#f7f7f7] p-10 rounded-2xl shadow-sm space-y-6"
+              >
 
                 {/* Heading */}
-                <div>
+                <motion.div variants={fadeUp}>
                   <h2 className="text-3xl md:text-4xl font-heading font-bold text-textDark mb-3">
                     Subscribe to the Shoova Restoration Report
                   </h2>
@@ -546,17 +861,14 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                   <p className="text-lg text-text leading-relaxed">
                     Receive updates on land restoration, youth training, and the progress of the Shoova Restoration Campus.
                   </p>
-                </div>
-
+                </motion.div>
 
                 {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4">
-
+                <motion.div variants={fadeUp} className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold tracking-wide mb-2">
                       FIRST NAME
                     </label>
-
                     <input
                       type="text"
                       placeholder="First name"
@@ -564,7 +876,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                       onChange={(e) =>
                         setFormData({ ...formData, firstName: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none transition"
                     />
                   </div>
 
@@ -572,7 +884,6 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                     <label className="block text-xs font-semibold tracking-wide mb-2">
                       LAST NAME
                     </label>
-
                     <input
                       type="text"
                       placeholder="Last name"
@@ -580,20 +891,16 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                       onChange={(e) =>
                         setFormData({ ...formData, lastName: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none transition"
                     />
                   </div>
-
-                </div>
-
+                </motion.div>
 
                 {/* Email */}
-                <div>
-
+                <motion.div variants={fadeUp}>
                   <label className="block text-xs font-semibold tracking-wide mb-2">
                     EMAIL
                   </label>
-
                   <input
                     type="email"
                     placeholder="Enter your email"
@@ -601,15 +908,12 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none transition"
                   />
-
-                </div>
-
+                </motion.div>
 
                 {/* Birthday */}
-                <div>
-
+                <motion.div variants={fadeUp}>
                   <label className="block text-xs font-semibold tracking-wide mb-2">
                     BIRTHDAY (OPTIONAL)
                   </label>
@@ -617,24 +921,14 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                   <DatePicker
                     selected={birthday}
                     onChange={(date) => setBirthday(date)}
-                    dateFormat="MMMM d, yyyy"
-                    showYearDropdown
-                    scrollableYearDropdown
-                    yearDropdownItemNumber={80}
-                    maxDate={new Date()}
-                    placeholderText="Select your birthday"
                     className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:outline-none"
                   />
+                </motion.div>
 
-                </div>
-
-
-                {/* Birthday Reminder Checkbox */}
-                <div className="flex items-start gap-3">
-
+                {/* Checkbox */}
+                <motion.div variants={fadeUp} className="flex items-start gap-3">
                   <input
                     type="checkbox"
-                    name="birthdayReminder"
                     checked={formData.birthdayReminder}
                     onChange={(e) =>
                       setFormData({
@@ -646,41 +940,32 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                   />
 
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    Set a reminder to pledge my birthday and help restore land and
-                    empower communities.
+                    Set a reminder to pledge my birthday and help restore land and empower communities.
                   </p>
+                </motion.div>
 
-                </div>
-
-
-                {/* Subscribe Button */}
-                <button
+                {/* BUTTON */}
+                <motion.button
+                  variants={fadeUp}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   type="submit"
                   className="w-full bg-secondary hover:bg-secondaryHover text-white font-semibold py-4 rounded-md transition shadow-md"
                 >
                   Keep Me Informed
-                </button>
+                </motion.button>
 
+                {/* Privacy */}
+                <motion.p variants={fadeUp} className="text-xs text-gray-500 leading-relaxed">
+                  By clicking “Subscribe”, you agree to receive updates from the Shoova Restoration Initiative.
+                </motion.p>
 
-                {/* Privacy / reCAPTCHA */}
-                <p className="text-xs text-gray-500 leading-relaxed">
-
-                  By clicking “Subscribe”, you agree to receive updates from the
-                  Shoova Restoration Initiative.
-
-                  <br /><br />
-
-                  This site is protected by reCAPTCHA and the Google
-                  Privacy Policy and Terms of Service apply.
-
-                </p>
-
-              </form>
+              </motion.form>
 
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Share the Story */}
         <section id="share_the_story" className="py-24 bg-background border-t border-gray-100">

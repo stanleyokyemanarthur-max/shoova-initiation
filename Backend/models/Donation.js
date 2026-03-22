@@ -44,8 +44,10 @@ const donationSchema = new mongoose.Schema({
   paymentStatus: String,
 
   // Donor Location
-  country: String,
-  city: String,
+  address: {
+  type: String,
+  default: "N/A"
+},
 
   // Optional donor note
   message: String,

@@ -1,66 +1,115 @@
 import nodemailer from "nodemailer";
 import generateReceipt from "./generateReceipt.js";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "essumanarthur24@gmail.com",
-    pass: "iojp wolh ffas edac"
-  }
-});
+export const sendReceipt = async ({
+  email,
+  amount,
+  donationId,
+  name,
+  address = "N/A" // fallback if not provided
+}) => {
+  try {
+    /* =========================
+       VALIDATION
+    ========================= */
+    if (!email || !amount || !donationId) {
+      throw new Error("Missing required donation fields");
+    }
 
-export const sendReceipt = async (email, amount, donationId) => {
+    const firstName = name?.split(" ")[0] || "Supporter";
 
-  // create the PDF receipt
-  const receiptPath = generateReceipt({
-    _id: donationId,
-    email,
-    amount,
-    donationType: "donation",
-    createdAt: new Date()
-  });
-
-  const mailOptions = {
-    from: `"Shoova Restoration Initiative" <essumanarthur24@gmail.com>`,
-    to: email,
-    subject: "Thank you for supporting Shoova 🌱",
-
-    html: `
-      <h2>Thank you for your donation!</h2>
-
-      <p>Dear supporter,</p>
-
-      <p>
-      Thank you for your generous donation of <strong>$${amount}</strong>
-      to the Shoova Restoration Initiative.
-      </p>
-
-      <p>
-      Your contribution helps restore land affected by illegal mining
-      and train the next generation of environmental engineers.
-      </p>
-
-      <hr/>
-
-      <h3>Donation Details</h3>
-
-      <p><strong>Donation ID:</strong> ${donationId}</p>
-      <p><strong>Amount:</strong> $${amount}</p>
-      <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-
-      <p>
-      With gratitude,<br/>
-      <strong>Shoova Restoration Initiative</strong>
-      </p>
-    `,
-
-    attachments: [
-      {
-        filename: `Shoova-Receipt-${donationId}.pdf`,
-        path: receiptPath
+    /* =========================
+       TRANSPORTER
+    ========================= */
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       }
-    ]
-  };
+    });
 
-  await transporter.sendMail(mailOptions);
+    /* =========================
+       GENERATE RECEIPT PDF
+    ========================= */
+    const receiptPath = generateReceipt({
+      _id: donationId,
+      email,
+      name,
+      address,
+      amount,
+      donationType: "donation",
+      createdAt: new Date()
+    });
+
+    /* =========================
+       EMAIL CONTENT
+    ========================= */
+    const formattedAmount = Number(amount).toLocaleString();
+
+    const mailOptions = {
+      from: `"Shoova Restoration Initiative" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your Official Donation Receipt – Shoova Initiative",
+
+      html: `
+        <h2>Thank you for your support 🌱</h2>
+
+        <p>Dear ${firstName},</p>
+
+        <p>
+          We sincerely appreciate your generous contribution of 
+          <strong>$${formattedAmount}</strong> to the Shoova Initiative.
+        </p>
+
+        <p>
+          Your support is directly helping restore degraded lands and 
+          empower the next generation through education and innovation.
+        </p>
+
+        <hr/>
+
+        <h3>Donation Summary</h3>
+
+        <p><strong>Donation ID:</strong> ${donationId}</p>
+        <p><strong>Amount:</strong> $${formattedAmount}</p>
+        <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+
+        <p>
+          Please find your official IRS-compliant donation receipt attached 
+          as a PDF for your records.
+        </p>
+
+        <br/>
+
+        <p>
+          With gratitude,<br/>
+          <strong>Shoova Initiative</strong>
+        </p>
+      `,
+
+      attachments: [
+        {
+          filename: `Shoova-Receipt-${donationId}.pdf`,
+          path: receiptPath
+        }
+      ]
+    };
+
+    /* =========================
+       SEND EMAIL
+    ========================= */
+    await transporter.sendMail(mailOptions);
+
+    console.log("✅ Receipt sent to:", email);
+
+    return { success: true };
+  } catch (error) {
+    console.error("❌ Error sending receipt:", error.message);
+
+    return {
+      success: false,
+      error: error.message
+    };
+  }
 };

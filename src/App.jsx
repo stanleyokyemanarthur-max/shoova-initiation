@@ -6,7 +6,7 @@ import Layout from "./components/Layout";
 
 import { IndexPage } from "./pages/IndexPage";
 import { AboutPage } from "./pages/AboutPage";
-import { BlogPage } from "./pages/BlogPage";
+import  BlogPage  from "./pages/BlogPage";
 import { ProgramsPage } from "./pages/ProgramsPage";
 import { ContactPage } from "./pages/ContactPage";
 import { DonatePage } from "./pages/DonatePage";
@@ -21,9 +21,25 @@ import Login from "./admin/pages/Login";
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
 import DonorProfile from "./admin/pages/DonorProfile";
 import Newsletter from "./admin/pages/Newsletter";
+import { Toaster } from "react-hot-toast";
+import SuccessPage from "./pages/successPage"; // adjust path
+
+
 
 const App = () => {
   return (
+    <>
+    <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            borderRadius: "12px",
+            background: "#111",
+            color: "#fff",
+            padding: "14px 18px",
+          },
+        }}
+      />
     <Router>
       <ScrollToTop />
 
@@ -38,6 +54,7 @@ const App = () => {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/donate" element={<DonatePage />} />
+          <Route path="/success" element={<SuccessPage />} />
 
         </Route>
 
@@ -66,6 +83,7 @@ const App = () => {
       </Routes>
 
     </Router>
+    </>
   );
 };
 
