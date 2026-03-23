@@ -212,8 +212,8 @@ app.post("/create-checkout-session", async (req, res) => {
         },
       ],
 
-      success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000/donate",
+      success_url: "https://shoova-initiation.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://shoova-initiation.vercel.app/donate",
     });
 
     res.json({ url: session.url });
