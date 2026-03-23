@@ -32,7 +32,17 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(cors({
-  origin: ["http://localhost:3000","https://shoova-initiation.vercel.app/" ],
+  origin: (origin, callback) => {
+    const allowed = [
+      "http://localhost:3000",
+      "https://shoova-initiation.vercel.app"
+    ];
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
