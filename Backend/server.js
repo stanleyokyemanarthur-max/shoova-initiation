@@ -493,14 +493,10 @@ app.get("/admin/receipt/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    let donation;
-
-    // 🔥 detect if it's Mongo ObjectId
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      donation = await Donation.findById(id);
-    } else {
-      donation = await Donation.findOne({ donationNumber: id });
-    }
+    // 🔥 ALWAYS use donationNumber
+    const donation = await Donation.findOne({
+      donationNumber: id
+    });
 
     if (!donation) {
       return res.status(404).json({ error: "Donation not found" });
@@ -524,17 +520,16 @@ app.get("/admin/receipt/:id", async (req, res) => {
   }
 });
 
+
+
+
 app.post("/admin/resend-receipt/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    let donation;
-
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      donation = await Donation.findById(id);
-    } else {
-      donation = await Donation.findOne({ donationNumber: id });
-    }
+    const donation = await Donation.findOne({
+      donationNumber: id
+    });
 
     if (!donation) {
       return res.status(404).json({ error: "Donation not found" });
@@ -555,7 +550,6 @@ app.post("/admin/resend-receipt/:id", async (req, res) => {
     res.status(500).json({ error: "Resend failed" });
   }
 });
-
 app.get("/admin/donor/:email", async (req, res) => {
 
   try {
