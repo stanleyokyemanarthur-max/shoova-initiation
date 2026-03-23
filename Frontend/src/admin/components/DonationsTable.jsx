@@ -7,7 +7,7 @@ export default function DonationsTable() {
   useEffect(() => {
 
     const fetchDonations = () => {
-      fetch("http://localhost:5000/admin/donations")
+      fetch("https://shoova-initiation.onrender.com/admin/donations")
         .then(res => res.json())
         .then(data => setDonations(data));
     };
@@ -25,7 +25,7 @@ export default function DonationsTable() {
     try {
 
       const res = await fetch(
-        `http://localhost:5000/admin/resend-receipt/${donationId}`,
+        `https://shoova-initiation.onrender.com/admin/resend-receipt/${donationId}`,
         { method: "POST" }
       );
 
@@ -103,7 +103,7 @@ export default function DonationsTable() {
                 <td className="flex gap-4">
 
                   <a
-                    href={`http://localhost:5000/admin/receipt/${d.donationNumber || d._id}`}
+                    href={`https://shoova-initiation.onrender.com/admin/receipt/${d.donationNumber || d._id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-green-600 font-semibold hover:underline"

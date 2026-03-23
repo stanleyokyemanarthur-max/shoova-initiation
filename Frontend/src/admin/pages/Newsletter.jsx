@@ -63,7 +63,7 @@ export default function NewsletterPage() {
 
   const loadDraft = async () => {
     try {
-      const res = await fetch("http://localhost:5000/draft/get");
+      const res = await fetch("https://shoova-initiation.onrender.com/draft/get");
       const data = await res.json();
 
       if (data.draft) {
@@ -83,7 +83,7 @@ export default function NewsletterPage() {
   /* ================= SAVE ================= */
   const saveDraft = async (silent = false) => {
     try {
-      const res = await fetch("http://localhost:5000/draft/save", {
+      const res = await fetch("https://shoova-initiation.onrender.com/draft/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -178,7 +178,7 @@ export default function NewsletterPage() {
 
       toast.loading("Sending newsletter...", { id: "send" });
 
-      const res = await fetch("http://localhost:5000/newsletter-send/send", {
+      const res = await fetch("https://shoova-initiation.onrender.com/newsletter-send/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -196,7 +196,7 @@ export default function NewsletterPage() {
         toast.success("Newsletter sent successfully 🚀", { id: "send" });
 
         // ✅ CLEAR DRAFT FROM DB
-        await fetch("http://localhost:5000/draft/clear", {
+        await fetch("https://shoova-initiation.onrender.com/draft/clear", {
           method: "DELETE"
         });
 

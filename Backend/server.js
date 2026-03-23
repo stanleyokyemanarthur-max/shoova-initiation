@@ -32,7 +32,17 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(cors({
-  origin: ["http://localhost:3000", ],
+  origin: (origin, callback) => {
+    const allowed = [
+      "http://localhost:3000",
+      "https://shoova-initiation.vercel.app"
+    ];
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
@@ -202,8 +212,8 @@ app.post("/create-checkout-session", async (req, res) => {
         },
       ],
 
-      success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000/donate",
+      success_url: "https://shoova-initiation.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://shoova-initiation.vercel.app/donate",
     });
 
     res.json({ url: session.url });

@@ -12,7 +12,7 @@ export default function Settings() {
 
   useEffect(() => {
 
-    fetch("http://localhost:5000/admin/settings")
+    fetch("https://shoova-initiation.onrender.com/admin/settings")
       .then(res => res.json())
       .then(data => setSettings(data));
 
@@ -29,7 +29,7 @@ export default function Settings() {
 
   const handleSave = async () => {
 
-    await fetch("http://localhost:5000/admin/settings", {
+    await fetch("https://shoova-initiation.onrender.com/admin/settings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
