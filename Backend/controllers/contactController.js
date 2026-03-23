@@ -48,7 +48,7 @@ export const sendContactEmail = async (req, res) => {
         <tr>
           <td style="padding: 10px 0; color: #999;">Email Address</td>
           <td style="padding: 10px 0;">
-            <a href="mailto:${email}" style="color: #D4AF37; text-decoration: none; font-weight: 500;">
+            <a href="mailto:${email}" style="color: #999; text-decoration: none; font-weight: 500;">
               ${email}
             </a>
           </td>
