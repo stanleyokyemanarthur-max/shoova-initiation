@@ -490,13 +490,16 @@ app.post("/admin/login", async (req, res) => {
 
 
 app.get("/admin/receipt/:id", async (req, res) => {
-
   try {
+    const id = req.params.id;
 
-    let donation = await Donation.findById(req.params.id);
+    let donation;
 
-    if (!donation) {
-      donation = await Donation.findOne({ donationNumber: req.params.id });
+    // 🔥 detect if it's Mongo ObjectId
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      donation = await Donation.findById(id);
+    } else {
+      donation = await Donation.findOne({ donationNumber: id });
     }
 
     if (!donation) {
@@ -519,39 +522,38 @@ app.get("/admin/receipt/:id", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Download failed" });
   }
-
 });
 
 app.post("/admin/resend-receipt/:id", async (req, res) => {
-
   try {
+    const id = req.params.id;
 
-    let donation = await Donation.findById(req.params.id);
+    let donation;
 
-    if (!donation) {
-      donation = await Donation.findOne({ donationNumber: req.params.id });
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      donation = await Donation.findById(id);
+    } else {
+      donation = await Donation.findOne({ donationNumber: id });
     }
 
     if (!donation) {
       return res.status(404).json({ error: "Donation not found" });
     }
 
-    await sendReceipt(
-      donation.email,
-      donation.amount,
-      donation.donationNumber,
-      donation.name
-    );
-    console.log("ACTUAL OBJECT USED:", donation);
+    await sendReceipt({
+      email: donation.email,
+      amount: donation.amount,
+      donationId: donation.donationNumber,
+      name: donation.name,
+      address: donation.address
+    });
+
     res.json({ success: true });
 
   } catch (error) {
-
     console.error(error);
     res.status(500).json({ error: "Resend failed" });
-
   }
-
 });
 
 app.get("/admin/donor/:email", async (req, res) => {
