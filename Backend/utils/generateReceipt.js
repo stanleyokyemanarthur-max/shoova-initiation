@@ -132,10 +132,7 @@ export default function generateReceipt(donation) {
      SIGNATURE (FIXED)
   ========================= */
 
-  const signaturePath = path.join(
-    __dirname,
-    "../../public/assets/signature.png"
-  );
+  const signaturePath = path.join(process.cwd(), "assets", "signature.png");
 
   console.log("Looking here:", signaturePath);
   console.log("Exists:", fs.existsSync(signaturePath));
