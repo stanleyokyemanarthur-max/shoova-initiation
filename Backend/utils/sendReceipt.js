@@ -1,12 +1,15 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import fs from "fs";
 import generateReceipt from "./generateReceipt.js";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendReceipt = async ({
   email,
   amount,
   donationId,
   name,
-  address = "N/A" // fallback if not provided
+  address = "N/A"
 }) => {
   try {
     /* =========================
@@ -17,26 +20,6 @@ export const sendReceipt = async ({
     }
 
     const firstName = name?.split(" ")[0] || "Supporter";
-
-    /* =========================
-       TRANSPORTER
-    ========================= */
-   const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-
-  // 🔥 FORCE IPV4
-  family: 4,
-
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
-});
 
     /* =========================
        GENERATE RECEIPT PDF
@@ -51,18 +34,20 @@ export const sendReceipt = async ({
       createdAt: new Date()
     });
 
-    /* =========================
-       EMAIL CONTENT
-    ========================= */
+    const fileBuffer = fs.readFileSync(receiptPath);
+
     const formattedAmount = Number(amount).toLocaleString();
 
-    const mailOptions = {
-      from: `"Shoova Restoration Initiative" <${process.env.EMAIL_USER}>`,
+    /* =========================
+       SEND EMAIL (RESEND)
+    ========================= */
+    await resend.emails.send({
+      from: "Shoova Initiative <onboarding@resend.dev>",
       to: email,
       subject: "Your Official Donation Receipt – Shoova Initiative",
 
       html: `
-        <h2>Thank you for your support 🌱</h2>
+        <h2>Thank you for your support</h2>
 
         <p>Dear ${firstName},</p>
 
@@ -73,7 +58,7 @@ export const sendReceipt = async ({
 
         <p>
           Your support is directly helping restore degraded lands and 
-          empower the next generation through education and innovation.
+          empower the next generation.
         </p>
 
         <hr/>
@@ -85,36 +70,30 @@ export const sendReceipt = async ({
         <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
 
         <p>
-          Please find your official IRS-compliant donation receipt attached 
-          as a PDF for your records.
+          Please find your official receipt attached.
         </p>
 
         <br/>
 
         <p>
-          With gratitude,<br/>
-          <strong>Shoova Initiative</strong>
+          Shoova Initiative
         </p>
       `,
 
       attachments: [
         {
           filename: `Shoova-Receipt-${donationId}.pdf`,
-          path: receiptPath
-        }
-      ]
-    };
+          content: fileBuffer.toString("base64"),
+        },
+      ],
+    });
 
-    /* =========================
-       SEND EMAIL
-    ========================= */
-    await transporter.sendMail(mailOptions);
-
-    console.log("✅ Receipt sent to:", email);
+    console.log("📧 Receipt email sent via Resend");
 
     return { success: true };
+
   } catch (error) {
-    console.error("❌ Error sending receipt:", error.message);
+    console.error("❌ Resend error:", error.message);
 
     return {
       success: false,
