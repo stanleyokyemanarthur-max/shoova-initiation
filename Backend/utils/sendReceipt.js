@@ -80,12 +80,13 @@ export const sendReceipt = async ({
         </p>
       `,
 
-      attachments: [
-        {
-          filename: `Shoova-Receipt-${donationId}.pdf`,
-          content: fileBuffer.toString("base64"),
-        },
-      ],
+     attachments: [
+  {
+    filename: `Shoova-Receipt-${donationId}.pdf`,
+    content: fileBuffer,
+    contentType: "application/pdf"
+  }
+]
     });
 
     console.log("📧 Receipt email sent via Resend");
