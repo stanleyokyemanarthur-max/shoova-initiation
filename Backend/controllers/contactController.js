@@ -12,7 +12,7 @@ export const sendContactEmail = async (req, res) => {
     try {
         await resend.emails.send({
             from: "Shoova Website <onboarding@resend.dev>",
-            to: "stanleyokyemanarthur@gmail.com",
+            to: "essumanarthur24@gmail.com",
 
             reply_to: email,
 
