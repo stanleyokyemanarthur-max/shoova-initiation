@@ -22,9 +22,9 @@ export const sendReceipt = async ({
     const firstName = name?.split(" ")[0] || "Supporter";
 
     /* =========================
-       GENERATE RECEIPT PDF
+       GENERATE RECEIPT PDF (WAIT!)
     ========================= */
-    const receiptPath = generateReceipt({
+    const receiptPath = await generateReceipt({
       _id: donationId,
       email,
       name,
@@ -47,46 +47,50 @@ export const sendReceipt = async ({
       subject: "Your Official Donation Receipt – Shoova Initiative",
 
       html: `
-        <h2>Thank you for your support</h2>
+        <div style="font-family: Arial, sans-serif; line-height:1.6;">
 
-        <p>Dear ${firstName},</p>
+          <h2>Thank you for your support</h2>
 
-        <p>
-          We sincerely appreciate your generous contribution of 
-          <strong>$${formattedAmount}</strong> to the Shoova Initiative.
-        </p>
+          <p>Dear ${firstName},</p>
 
-        <p>
-          Your support is directly helping restore degraded lands and 
-          empower the next generation.
-        </p>
+          <p>
+            We sincerely appreciate your generous contribution of 
+            <strong>$${formattedAmount}</strong> to the Shoova Initiative.
+          </p>
 
-        <hr/>
+          <p>
+            Your support is directly helping restore degraded lands and 
+            empower the next generation.
+          </p>
 
-        <h3>Donation Summary</h3>
+          <hr/>
 
-        <p><strong>Donation ID:</strong> ${donationId}</p>
-        <p><strong>Amount:</strong> $${formattedAmount}</p>
-        <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+          <h3>Donation Summary</h3>
 
-        <p>
-          Please find your official receipt attached.
-        </p>
+          <p><strong>Donation ID:</strong> ${donationId}</p>
+          <p><strong>Amount:</strong> $${formattedAmount}</p>
+          <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
 
-        <br/>
+          <p>
+            Please find your official donation receipt attached.
+          </p>
 
-        <p>
-          Shoova Initiative
-        </p>
+          <br/>
+
+          <p>
+            Shoova Initiative
+          </p>
+
+        </div>
       `,
 
-     attachments: [
-  {
-    filename: `Shoova-Receipt-${donationId}.pdf`,
-    content: fileBuffer,
-    contentType: "application/pdf"
-  }
-]
+      attachments: [
+        {
+          filename: `Shoova-Receipt-${donationId}.pdf`,
+          content: fileBuffer,
+          contentType: "application/pdf"
+        }
+      ]
     });
 
     console.log("📧 Receipt email sent via Resend");
