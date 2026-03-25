@@ -2,8 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import DatePicker from "react-datepicker";
+import CampusExperienceSection from '../components/campusExperienceSection';
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function StoryPage() {
+  const ref = useRef(null);
+const { scrollY } = useScroll();
+
+const y = useTransform(scrollY, [0, 800], [0, 200]);
+const opacity = useTransform(scrollY, [0, 500], [1, 0.7]);
+
+
+
   const [birthday, setBirthday] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
 
@@ -77,114 +87,119 @@ export default function StoryPage() {
     <div className="font-body antialiased bg-white text-gray-900">
 
       {/* ================= HERO ================= */}
-      <section className="relative h-screen w-full flex items-center overflow-hidden">
+      <section
+        ref={ref}
+        className="relative h-screen w-full flex items-center overflow-hidden"
+      >
 
-        {/* BG IMAGE */}
-        <div className="absolute inset-0">
+        {/* BG IMAGE (PARALLAX) */}
+        <motion.div
+          style={{ translateY: y }}
+          className="absolute inset-0"
+        >
           <img
             src="/img/repair.jpg"
             alt="Galamsey destruction"
-            className="w-full h-full object-cover"
+            className="w-full h-[120%] object-cover"
           />
-        </div>
+        </motion.div>
 
         {/* OVERLAY */}
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
 
         {/* CONTENT */}
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-
+        <motion.div
+          style={{ opacity }}
+          className="relative z-10 max-w-6xl mx-auto px-6"
+        >
           <div className="max-w-3xl mx-auto text-center text-white">
 
-  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6">
-    Our Story
-  </h1>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6">
+              Our Story
+            </h1>
 
-  <p className="text-2xl md:text-2xl text-white mb-6 leading-relaxed">
-    From the impact of illegal mining to the vision of rebuilding through
-    education and innovation, this is where restoration begins.
-  </p>
+            <p className="text-2xl md:text-2xl text-white mb-6 leading-relaxed">
+              From the impact of illegal mining to the vision of rebuilding through
+              education and innovation, this is where restoration begins.
+            </p>
 
-</div>
+          </div>
+        </motion.div>
 
-        </div>
-
+        {/* SCROLL INDICATOR */}
         <div className="absolute bottom-8 left-10 text-white/70 animate-bounce">
           ↓
         </div>
       </section>
 
+      <section className="bg-[#F9FAFB] py-32 px-6">
 
-      {/* ================= FOUNDERS (PREMIUM QUOTE SECTION) ================= */}
-      <section className="py-28 bg-gray-50 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center">
 
-        {/* 🔷 SOFT BRAND BACKGROUND SHAPE */}
-        <div className="absolute left-0 top-0 w-1/2 h-full -skew-x-12 bg-secondary/5 origin-top-left"></div>
+          {/* LABEL */}
+          <p className="text-sm tracking-[0.3em] uppercase text-gray-500 mb-6">
+            From the Founders
+          </p>
 
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center gap-16 relative z-10">
+          {/* TITLE */}
+          <h2 className="text-2xl md:text-2xl font-bold text-gray-900 mb-12 leading-tight">
+            Welcome to the Shoova Initiative.
+          </h2>
 
-          {/* ================= IMAGE SIDE ================= */}
-          <div className="relative flex justify-center md:justify-start">
-            <div className="relative">
-
-              <img
-                src="/img/remove.png"
-                alt="Shoova Founders"
-                className="w-[340px] md:w-[420px] object-contain drop-shadow-2xl"
-              />
-
-              {/* subtle glow */}
-              <div className="absolute inset-0 bg-secondary/10 blur-3xl -z-10"></div>
-
-            </div>
-          </div>
-          {/* ================= TEXT SIDE ================= */}
-          <div className="max-w-xl">
-            {/* LABEL */}
-            <p className="text-sm uppercase tracking-widest text-secondary font-semibold mb-4">
-              The Shoova Approach
+          {/* BODY */}
+          <div className="text-gray-700 text-lg md:text-xl leading-relaxed space-y-3 text-left md:text-center">
+            <p>
+              For years, our professional journey has been defined by building systems and providing high-level consulting through a "Follow-the-Sun" model. But as we looked at the landscapes of our home in Ghana, we saw a different kind of "sun" rising—one that revealed a land "plundered and looted" by the scars of illegal mining—galamsey.
+            </p>
+            <p>
+              We realized that professional success is only the beginning; the true goal is significance.
             </p>
 
-            {/* QUOTE BLOCK */}
-            <div className="text-gray-600 text-lg leading-relaxed mb-8 italic relative pl-6">
+            {/* SCRIPTURE HIGHLIGHT */}
+            <p className="italic text-gray-900 font-medium border-l-4 border-[#D4AF37] pl-6 md:pl-0 md:border-0 md:text-center">
+              “But this is a people plundered and looted; they are all of them snared in holes and hidden in prisons; they have become plunder with none to rescue, spoil with none to say, ‘Restore!’”
+              <br />
+              <span className="block mt-2 text-sm text-gray-500">— Isaiah 42:22</span>
+            </p>
+            <p>
+              The Shoova Initiative is our response to that call. We are not just building a charity; we are building a Restoration Engine.
+            </p>
+            <p>
+              Our 8-acre campus in Ghana is designed with a specific purpose: to provide the “Brain” (Academic training), the “Heart” (Technical production), and the “Soul” (Dignified community) for youth who are ready to pivot from the hazards of the mines to the dignity of a career.
+            </p>
+            <p>
+              Through our School of Engineering & Fabrication, School of Sustainable Futures, and the School of Ethical Leadership, we are giving a new generation the tools and the 0%–2% interest startup loans to rebuild their lives and their land.
+            </p>
+            <p>
+              We move forward with the highest level of integrity, backed by our official 501(c)(3) status in the U.S. and our legal registration in Ghana.
+            </p>
+            <p>
+              We invite you to be the “nurturing hands” in our story. Whether you are a technical partner, a financial donor, or a friend sharing the vision, you are helping us say “Restore!” to a land that has waited far too long for a new dawn.
+            </p>
 
-              {/* OPEN QUOTE */}
-              <span className="absolute left-0 top-0 text-4xl text-primary leading-none">
-                “
-              </span>
+            <p className="font-semibold text-gray-900 text-xl">
+              We are not just doing good. We are building a sustainable infrastructure for hope.
+            </p>
 
-              {/* MAIN TEXT */}
-              <div className="space-y-5">
+          </div>
 
-                <p className='text-xl'>
-                  Our work is anchored in Isaiah 42:22; But this is a people plundered and looted; all of them are trapped in holes and hidden in prisons. They have become prey with no one to rescue them, spoil with no one to say, 'Restore!'
-                  <br />
-                  We founded the Shoova Initiative because we believe that the same analytical rigor
-                  used to manage global portfolios should be applied to healing the earth.
-                </p>
+          {/* SIGNATURE */}
+          <div className="mt-16 text-center">
 
-                <p className="font-semibold text-gray-900 text-xl">
-                  We are not just doing good. We are building a sustainable infrastructure for hope.
-                </p>
+            <p className="text-gray-500 mb-6">With gratitude and hope,</p>
 
-              </div>
-
-              {/* CLOSE QUOTE */}
-              <span className="text-primary text-3xl ml-1">”</span>
-
+            <div className="text-xl font-semibold text-gray-900">
+              William Agyekum & Salome Agyekum
             </div>
 
-            {/* SIGNATURE */}
-            <h3 className="text-gray-800 font-medium">
-              <span className="font-semibold">William Agyekum & Salome Agyekum</span>
-              <span className="text-gray-500"> — Co-Founders, Shoova Initiative</span>
-            </h3>
+            <p className="text-gray-500 mt-2">
+              Co-Founders, Shoova Initiative
+            </p>
 
           </div>
 
         </div>
-
       </section>
       {/* ================= PARTNERSHIP CTA ================= */}
       <section className="py-32 bg-white text-center">
@@ -221,7 +236,6 @@ export default function StoryPage() {
         </div>
 
       </section>
-
 
       {/* ================= TRANSFORMATION SECTION ================= */}
       <section className="py-32 bg-gray-50 relative overflow-hidden">
@@ -382,25 +396,6 @@ export default function StoryPage() {
         </div>
 
       </section>
-
-
-      {/* ================= CAMPUS ================= */}
-      <section className="py-32 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-6">
-
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            The Shoova Restoration Campus
-          </h2>
-
-          <p className="text-lg text-gray-700 leading-relaxed">
-            We are building an 8-acre vocational institute where youth are trained
-            in engineering, sustainability, and leadership — transforming extraction
-            into restoration.
-          </p>
-
-        </div>
-      </section>
-
       {/* ================= HOW YOU CAN BE PART OF RESTORATION ================= */}
       <section className="py-28 bg-[#f4f7f8]">
 
@@ -486,6 +481,8 @@ export default function StoryPage() {
         </div>
 
       </section>
+
+      <CampusExperienceSection />
 
       {/* Restoration Report */}
       <section

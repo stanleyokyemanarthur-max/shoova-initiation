@@ -808,6 +808,63 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
         </section>
 
+        <section className="py-28 bg-[#F9FAFB] relative overflow-hidden">
+
+          {/* SUBTLE BACKGROUND ACCENT */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(212,175,55,0.08),transparent_60%)]"></div>
+
+          <div className="relative max-w-5xl mx-auto px-6 text-center">
+
+            {/* LABEL */}
+            <p className="text-sm uppercase font-bold tracking-[0.3em] text-[#D4AF37] mb-4">
+              Campus Development
+            </p>
+
+            {/* TITLE */}
+            <h2 className="text-3xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+              The Shoova Restoration Campus is Under Development
+            </h2>
+
+            {/* BODY */}
+            <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto mb-6">
+              Our 8-acre campus in Ghana’s Eastern Region is currently in its planning phase.
+              This space will soon host academic training, technical production, and a
+              residential community designed to restore both land and livelihoods.
+            </p>
+
+            {/* STATUS BADGE */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="inline-block px-6 py-3 bg-white border border-gray-200 rounded-full shadow-sm text-gray-800 font-semibold mb-10"
+            >
+              🚧 Coming Soon
+            </motion.div>
+
+            {/* OPTIONAL CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+              <Link
+                to="/contact"
+                className="px-8 py-3 bg-secondary text-white rounded-full font-semibold hover:bg-secondaryHover transition"
+              >
+                Partner With Us
+              </Link>
+
+              <Link
+                to="/about"
+                className="px-8 py-3 border border-gray-300 rounded-full font-semibold text-gray-800 hover:bg-gray-100 transition"
+              >
+                Learn More
+              </Link>
+
+            </div>
+
+          </div>
+
+        </section>
+
         <motion.section
           id="restoration_report"
           variants={container}

@@ -2,7 +2,6 @@ import { Resend } from "resend";
 import fs from "fs";
 import generateReceipt from "./generateReceipt.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendReceipt = async ({
   email,
@@ -13,11 +12,12 @@ export const sendReceipt = async ({
 }) => {
   try {
     /* =========================
-       VALIDATION
+    VALIDATION
     ========================= */
     if (!email || !amount || !donationId) {
       throw new Error("Missing required donation fields");
     }
+   
 
     const firstName = name?.split(" ")[0] || "Supporter";
 
@@ -33,6 +33,8 @@ export const sendReceipt = async ({
       donationType: "donation",
       createdAt: new Date()
     });
+     const resend = new Resend(process.env.RESEND_API_KEY);
+    console.log("RESEND KEY:", process.env.RESEND_API_KEY);
 
     const fileBuffer = fs.readFileSync(receiptPath);
 

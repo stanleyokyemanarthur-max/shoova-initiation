@@ -71,7 +71,7 @@ const Footer = () => {
               <div className="pt-2 space-y-1 text-white/70">
                 <p>+1(612)422-8230</p>
                 <p>+233 54 168 1920</p>
-                <p>info@shoova.org</p>
+                <p>info@shoovainitiative.org</p>
               </div>
 
             </div>

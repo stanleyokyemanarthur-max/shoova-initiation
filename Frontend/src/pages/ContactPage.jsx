@@ -37,42 +37,42 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const loadingToast = toast.loading("Sending message...");
+    const loadingToast = toast.loading("Sending message...");
 
-  try {
-    const res = await fetch("https://shoova-initiation.onrender.com/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-
-    toast.dismiss(loadingToast);
-
-    if (data.success) {
-      toast.success("Message sent successfully 🎉");
-
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        subject: "General Inquiry",
-        message: "",
+    try {
+      const res = await fetch("https://shoova-initiation.onrender.com/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    } else {
-      toast.error("Failed to send message.");
-    }
 
-  } catch (error) {
-    toast.dismiss(loadingToast);
-    toast.error("Server error.");
-  }
-};
+      const data = await res.json();
+
+      toast.dismiss(loadingToast);
+
+      if (data.success) {
+        toast.success("Message sent successfully 🎉");
+
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          subject: "General Inquiry",
+          message: "",
+        });
+      } else {
+        toast.error("Failed to send message.");
+      }
+
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Server error.");
+    }
+  };
 
 
 
@@ -128,7 +128,7 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4"><MapPin className="w-6 h-6" /></div>
                     <h3 className="font-bold text-textDark mb-2"> Visit Us </h3>
                     <p className="text-text text-sm">
-                      Accra ,Ghana
+                      St. Michael, Minnesota
                       <br />
 
                     </p>
@@ -137,16 +137,14 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
                     <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center text-secondary mb-4"><Mail className="w-6 h-6" /></div>
                     <h3 className="font-bold text-textDark mb-2"> Email Us </h3>
                     <p className="text-text text-sm">
-                      info@shoova.org
-                      <br />
-                      partners@shoova.org
+                      info@shoovainitiative.org
                     </p>
                   </div>
                   <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-yellow-600 mb-4"><Phone className="w-6 h-6" /></div>
                     <h3 className="font-bold text-textDark mb-2"> Call Us </h3>
                     <p className="text-text text-sm">
-                      +1 (7890) 123-4567
+                      +1(612)422-8230
                       <br />
                       Mon-Fri, 9am - 5pm
                     </p>
@@ -157,17 +155,21 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
                     <p className="text-text text-sm">
                       Join our team
                       <br />
-                      volunteer@shoova.org
+                      info@shoovainitiative.org
                     </p>
                   </div>
                 </div>
                 {/* Map Placeholder */}
-                <div className="bg-gray-200 rounded-2xl h-64 w-full flex items-center justify-center text-gray-400 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-50 grayscale"></div>
-                  <div className="relative z-10 bg-white/80 backdrop-blur px-6 py-3 rounded-full font-bold shadow-lg">
-                    <Map className="inline-block w-5 h-5 mr-2 align-text-bottom" />
-                    View on Google Maps
-                  </div>
+                <div className="rounded-2xl overflow-hidden shadow-lg h-64 w-full">
+
+                  <iframe
+                    title="Shoova Location - St Michael Minnesota"
+                    src="https://www.google.com/maps?q=St%20Michael%20Minnesota&output=embed"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+
                 </div>
               </div>
               {/* Contact Form */}
@@ -182,7 +184,7 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
                         value={formData.firstName}
                         onChange={handleChange}
                         placeholder="Jane"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"  />
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-textDark mb-2"> Last Name </label>
@@ -191,7 +193,7 @@ export const ContactPage = ({ className, children, variant, contentKey, ...props
                         value={formData.lastName}
                         onChange={handleChange}
                         placeholder="Doe"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"/>
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                     </div>
                   </div>
                   <div>
