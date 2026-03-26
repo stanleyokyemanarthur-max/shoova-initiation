@@ -262,7 +262,7 @@ export const AboutPage = ({ className, children, variant, contentKey, ...props }
               {/* Restoration Image */}
               <div className="absolute bottom-0 right-0 w-[75%] z-20">
                 <img
-                  src="/img/tech.jpg"
+                  src="/img/rstores.jpg"
                   alt="Vocational training and restoration"
                   className="rounded-xl shadow-2xl rotate-[2deg] object-cover w-full h-[240px]"
                 />

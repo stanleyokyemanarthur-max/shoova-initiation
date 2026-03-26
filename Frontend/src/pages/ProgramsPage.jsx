@@ -136,7 +136,7 @@ export const ProgramsPage = ({ className, children, variant, contentKey, ...prop
       <div className="relative">
         <div className="absolute -inset-4 bg-secondary/20 rounded-3xl transform -rotate-3 -z-10"></div>
         <img
-          src="/img/youth.jpg"
+          src="/img/team.jpg"
           alt="Shoova training"
           className="rounded-2xl shadow-xl w-full h-[420px] object-cover"
         />
