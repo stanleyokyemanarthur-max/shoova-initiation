@@ -497,7 +497,7 @@ const opacity = useTransform(scrollY, [0, 500], [1, 0.7]);
             <div className="relative">
 
               <img
-                src="/img/gh12.jpg"
+                src="/img/Header.png"
                 alt="Youth restoring degraded land in Ghana"
                 className="w-full h-[520px] object-cover rounded-2xl shadow-xl"
               />
@@ -505,8 +505,8 @@ const opacity = useTransform(scrollY, [0, 500], [1, 0.7]);
               {/* Caption Overlay */}
               <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur px-6 py-4 rounded-xl shadow-lg max-w-xs">
                 <p className="text-sm text-gray-700 font-medium">
-                  Youth restoring degraded land in Ghana’s Eastern Region through the
-                  Shoova Restoration Initiative.
+                  Receive real-time updates on land restoration,
+                   student progress, and the impact your support is making.
                 </p>
               </div>
 
