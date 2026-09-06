@@ -38,10 +38,13 @@ const getExcerpt = (text, length = 150) => {
 };
 
 export default function StoriesPage() {
-  const [stories, setStories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+const [stories, setStories] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+const [activeCategory, setActiveCategory] = useState("All");
+
+const [mediaCoverage, setMediaCoverage] = useState([]);
+const [mediaLoading, setMediaLoading] = useState(true);
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -73,6 +76,32 @@ export default function StoriesPage() {
     fetchStories();
   }, []);
 
+  useEffect(() => {
+  const fetchMediaCoverage = async () => {
+    try {
+      setMediaLoading(true);
+
+      const response = await fetch(`${API_URL}/media-coverage`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch media coverage");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMediaCoverage(data.coverage || []);
+      }
+    } catch (err) {
+      console.error("Media coverage fetch error:", err);
+    } finally {
+      setMediaLoading(false);
+    }
+  };
+
+  fetchMediaCoverage();
+}, []);
+
   const filteredStories = useMemo(() => {
     if (activeCategory === "All") {
       return stories;
@@ -92,7 +121,7 @@ export default function StoriesPage() {
 
   return (
     <main className="min-h-screen bg-[#FDF6F0] text-[#0D1B2A]">
-      {/* HERO */}
+     
       <section className="relative overflow-hidden bg-[#0D1B2A]">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full border border-[#ECD9B0]" />
@@ -123,7 +152,7 @@ export default function StoriesPage() {
         </div>
       </section>
 
-      {/* CATEGORY FILTER */}
+      
       <section className="border-b border-[#0D1B2A]/10 bg-white">
         <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-6 py-5 md:px-10 lg:px-16">
           {categories.map((category) => (
@@ -143,7 +172,7 @@ export default function StoriesPage() {
         </div>
       </section>
 
-      {/* CONTENT */}
+      
       <section className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16 lg:py-24">
         {loading ? (
           <div className="flex min-h-[400px] items-center justify-center">
@@ -341,7 +370,150 @@ export default function StoriesPage() {
         )}
       </section>
 
-      {/* CTA */}
+
+
+{!mediaLoading && mediaCoverage.length > 0 && (
+  <section className="border-t border-[#0D1B2A]/10 bg-white">
+    <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16 lg:py-28">
+
+  
+      <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#7C1C2E]">
+            In the News
+          </p>
+
+          <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
+            Shoova in the media.
+          </h2>
+
+          <p className="mt-4 max-w-2xl text-base leading-7 text-[#0D1B2A]/60">
+            Discover stories and coverage from independent news
+            organizations documenting the Shoova restoration movement.
+          </p>
+        </div>
+
+        <div className="hidden md:block">
+          <Newspaper
+            size={38}
+            strokeWidth={1}
+            className="text-[#0D1B2A]/15"
+          />
+        </div>
+
+      </div>
+
+      <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+
+        {mediaCoverage.slice(0, 3).map((item) => (
+          <article
+            key={item._id}
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#0D1B2A]/10 bg-[#FDF6F0] transition duration-500 hover:-translate-y-1 hover:shadow-xl"
+          >
+
+         
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative block aspect-[16/10] overflow-hidden bg-[#E9DED5]"
+            >
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-[#0D1B2A]">
+                  <Newspaper
+                    size={48}
+                    strokeWidth={1}
+                    className="text-[#ECD9B0]/30"
+                  />
+                </div>
+              )}
+
+      
+              <div className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#0D1B2A] shadow-sm">
+                {item.siteName}
+              </div>
+
+            </a>
+
+            <div className="flex flex-1 flex-col p-6">
+
+              <div className="flex items-center gap-2 text-xs text-[#0D1B2A]/45">
+                <CalendarDays size={13} />
+
+                {formatDate(
+                  item.publishedAt || item.createdAt
+                )}
+              </div>
+
+
+              <h3 className="mt-4 font-serif text-2xl leading-tight text-[#0D1B2A] transition-colors group-hover:text-[#7C1C2E]">
+                {item.title}
+              </h3>
+
+
+              {item.description && (
+                <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#0D1B2A]/60">
+                  {getExcerpt(item.description, 170)}
+                </p>
+              )}
+
+              <div className="mt-auto pt-6">
+
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#7C1C2E]"
+                >
+                  Read original article
+
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+        ))}
+
+      </div>
+
+
+      {mediaCoverage.length > 3 && (
+        <div className="mt-10 text-center">
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-3 rounded-full border border-[#0D1B2A]/15 px-6 py-3 text-sm font-semibold text-[#0D1B2A] transition hover:border-[#7C1C2E] hover:text-[#7C1C2E]"
+            onClick={() => {
+              window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+              });
+            }}
+          >
+            More media coverage
+            <ArrowRight size={16} />
+          </button>
+
+        </div>
+      )}
+
+    </div>
+  </section>
+)}
+
       <section className="bg-[#0D1B2A]">
         <div className="mx-auto max-w-5xl px-6 py-20 text-center md:px-10 lg:py-24">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ECD9B0]">
