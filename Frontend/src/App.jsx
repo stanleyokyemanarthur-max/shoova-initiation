@@ -35,6 +35,9 @@ import VerifyOTP from "./admin/pages/OtpPage";
 import Stories from "./admin/pages/Stories";
 import NewStory from "./admin/pages/NewStory";
 import EditStory from "./admin/pages/EditStory";
+import TestLinkPreview from "./admin/pages/TestLinkPreview";
+
+
 function loadAnalytics() {
   const GA_ID = "";
 
@@ -233,6 +236,7 @@ const App = () => {
             <Route path="stories" element={<Stories />} />
             <Route path="stories/new" element={<NewStory />} />
             <Route path="stories/:id/edit" element={<EditStory />} />
+            <Route path="test-link-preview" element={<TestLinkPreview />} />
           </Route>
 
         </Routes>
