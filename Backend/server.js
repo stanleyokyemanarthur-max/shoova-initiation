@@ -29,7 +29,7 @@ import { verifyAdmin } from "./middleware/verifyAdmin.js";
 import paypal from "@paypal/checkout-server-sdk";
 import client from "./paypalClient.js";
 import storyRoute from "./routes/storyRoute.js";
-
+import linkPreviewRoute from "./routes/linkPreviewRoute.js";
 const app = express();
 
 app.use(cors({
@@ -980,6 +980,7 @@ app.use("/draft", draftRoutes);
 app.use("/stories", storyRoute);
 app.use("/engagement", engagementRoutes);
 app.use("/api", contactRoutes);
+app.use("/link-preview", linkPreviewRoute);
 
 
 
