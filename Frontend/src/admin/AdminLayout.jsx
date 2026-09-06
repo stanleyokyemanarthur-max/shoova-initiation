@@ -76,6 +76,13 @@ export default function AdminLayout() {
             <Newspaper size={20} />
             Stories
           </Link>
+          <Link
+  to="/admin/media-coverage"
+  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition"
+>
+  <Newspaper size={20} />
+  Media Coverage
+</Link>
  
           <Link
             to="/admin/settings"

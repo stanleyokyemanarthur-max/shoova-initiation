@@ -36,7 +36,7 @@ import Stories from "./admin/pages/Stories";
 import NewStory from "./admin/pages/NewStory";
 import EditStory from "./admin/pages/EditStory";
 import TestLinkPreview from "./admin/pages/TestLinkPreview";
-
+import MediaCoverage from "./admin/pages/MediaCoverage";
 
 function loadAnalytics() {
   const GA_ID = "";
@@ -194,7 +194,7 @@ const App = () => {
 
         <Routes>
 
-          
+
           <Route element={<Layout />}>
 
             <Route path="/" element={<IndexPage />} />
@@ -211,6 +211,7 @@ const App = () => {
             <Route path="/shoova-campus" element={<ShoovaCampus />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/admin/verify-otp" element={<VerifyOTP />} />
+
 
           </Route>
 
@@ -237,6 +238,10 @@ const App = () => {
             <Route path="stories/new" element={<NewStory />} />
             <Route path="stories/:id/edit" element={<EditStory />} />
             <Route path="test-link-preview" element={<TestLinkPreview />} />
+            <Route
+              path="media-coverage"
+              element={<MediaCoverage />}
+            />
           </Route>
 
         </Routes>
