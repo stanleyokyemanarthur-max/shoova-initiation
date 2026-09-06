@@ -120,37 +120,37 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
   };
 
   const [journalStories, setJournalStories] = useState([]);
-  const [journalLoading, setJournalLoading] = useState(true);
-  useEffect(() => {
-    const fetchJournalStories = async () => {
-      try {
-        const response = await fetch(
-          "https://shoova-initiation-nf6m.onrender.com/stories"
-        );
+const [journalLoading, setJournalLoading] = useState(true);
+useEffect(() => {
+  const fetchJournalStories = async () => {
+    try {
+      const response = await fetch(
+        "https://shoova-initiation-nf6m.onrender.com/stories"
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.success) {
-          setJournalStories(data.stories || []);
-        }
-      } catch (error) {
-        console.error("Failed to load journal stories:", error);
-      } finally {
-        setJournalLoading(false);
+      if (data.success) {
+        setJournalStories(data.stories || []);
       }
-    };
+    } catch (error) {
+      console.error("Failed to load journal stories:", error);
+    } finally {
+      setJournalLoading(false);
+    }
+  };
 
-    fetchJournalStories();
-  }, []);
+  fetchJournalStories();
+}, []);
 
-  const featuredJournalStory =
-    journalStories.find((story) => story.featured) || journalStories[0];
+const featuredJournalStory =
+  journalStories.find((story) => story.featured) || journalStories[0];
 
-  const latestJournalStories = journalStories
-    .filter((story) => story._id !== featuredJournalStory?._id)
-    .slice(0, 2);
+const latestJournalStories = journalStories
+  .filter((story) => story._id !== featuredJournalStory?._id)
+  .slice(0, 2);
 
-
+  
   return (
 
     <div className="font-body cursor-default antialiased">
@@ -509,258 +509,258 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
         </section>
         <GalamseySection />
 
+   
+<section className="relative overflow-hidden bg-[#F8F5EE] py-24 md:py-32">
+  <div className="mx-auto max-w-7xl px-6 md:px-10">
 
-        <section className="relative overflow-hidden bg-[#F8F5EE] py-24 md:py-32">
-          <div className="mx-auto max-w-7xl px-6 md:px-10">
+    <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
-            <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7 }}
+        className="max-w-3xl"
+      >
+        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-[#7C1C2E]">
+          From the Journal
+        </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.7 }}
-                className="max-w-3xl"
-              >
-                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-[#7C1C2E]">
-                  From the Journal
-                </p>
+        <h2 className="font-display text-4xl font-medium leading-tight text-[#0D1B2A] md:text-5xl lg:text-6xl">
+          Stories from the work
+          <span className="block italic">
+            on the ground.
+          </span>
+        </h2>
 
-                <h2 className="font-display text-4xl font-medium leading-tight text-[#0D1B2A] md:text-5xl lg:text-6xl">
-                  Stories from the work
-                  <span className="block italic">
-                    on the ground.
+        <p className="mt-6 max-w-2xl text-base leading-8 text-[#0D1B2A]/70 md:text-lg">
+          Follow the people, ideas, field work and milestones shaping
+          the Shoova restoration movement.
+        </p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, delay: 0.1 }}
+      >
+        <Link
+          to="/stories"
+          className="group inline-flex items-center gap-3 border-b border-[#0D1B2A] pb-2 text-sm font-semibold uppercase tracking-[0.15em] text-[#0D1B2A] transition hover:text-[#7C1C2E]"
+        >
+          Explore the Journal
+
+          <ArrowRight
+            size={18}
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </Link>
+      </motion.div>
+
+    </div>
+
+    {journalLoading && (
+      <div className="grid gap-6 md:grid-cols-3">
+        {[1, 2, 3].map((item) => (
+          <div
+            key={item}
+            className="h-[420px] animate-pulse rounded-2xl bg-[#E9E3D8]"
+          />
+        ))}
+      </div>
+    )}
+
+    {!journalLoading && featuredJournalStory && (
+      <div className="grid gap-6 lg:grid-cols-12">
+
+      
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8 }}
+          className="lg:col-span-7"
+        >
+          <Link
+            to={`/stories/${featuredJournalStory.slug}`}
+            className="group block h-full"
+          >
+            <article className="relative h-full min-h-[520px] overflow-hidden rounded-2xl bg-[#0D1B2A]">
+              {featuredJournalStory.coverImage ? (
+                <img
+                  src={featuredJournalStory.coverImage}
+                  alt={featuredJournalStory.title}
+                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[#0D1B2A]" />
+              )}
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A] via-[#0D1B2A]/55 to-transparent" />
+
+              <div className="relative flex h-full min-h-[520px] flex-col justify-end p-7 md:p-10">
+
+                <div className="mb-auto flex items-start justify-between">
+                  <span className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white backdrop-blur-sm">
+                    {featuredJournalStory.category}
                   </span>
-                </h2>
 
-                <p className="mt-6 max-w-2xl text-base leading-8 text-[#0D1B2A]/70 md:text-lg">
-                  Follow the people, ideas, field work and milestones shaping
-                  the Shoova restoration movement.
-                </p>
-              </motion.div>
+                  <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm">
+                    Featured
+                  </span>
+                </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-              >
-                <Link
-                  to="/stories"
-                  className="group inline-flex items-center gap-3 border-b border-[#0D1B2A] pb-2 text-sm font-semibold uppercase tracking-[0.15em] text-[#0D1B2A] transition hover:text-[#7C1C2E]"
-                >
-                  Explore the Journal
+                <div>
+                  <div className="mb-4 text-sm text-white/70">
+                    {featuredJournalStory.publishedAt
+                      ? new Date(
+                          featuredJournalStory.publishedAt
+                        ).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : ""}
+                  </div>
 
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </Link>
-              </motion.div>
+                  <h3 className="max-w-3xl font-display text-3xl font-medium leading-tight text-white md:text-4xl lg:text-5xl">
+                    {featuredJournalStory.title}
+                  </h3>
 
-            </div>
+                  <p className="mt-5 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
+                    {featuredJournalStory.excerpt}
+                  </p>
 
-            {journalLoading && (
-              <div className="grid gap-6 md:grid-cols-3">
-                {[1, 2, 3].map((item) => (
-                  <div
-                    key={item}
-                    className="h-[420px] animate-pulse rounded-2xl bg-[#E9E3D8]"
-                  />
-                ))}
-              </div>
-            )}
+                  <div className="mt-7 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.15em] text-white">
+                    Read story
 
-            {!journalLoading && featuredJournalStory && (
-              <div className="grid gap-6 lg:grid-cols-12">
-
-
-                <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 0.8 }}
-                  className="lg:col-span-7"
-                >
-                  <Link
-                    to={`/stories/${featuredJournalStory.slug}`}
-                    className="group block h-full"
-                  >
-                    <article className="relative h-full min-h-[520px] overflow-hidden rounded-2xl bg-[#0D1B2A]">
-                      {featuredJournalStory.coverImage ? (
-                        <img
-                          src={featuredJournalStory.coverImage}
-                          alt={featuredJournalStory.title}
-                          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-[#0D1B2A]" />
-                      )}
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A] via-[#0D1B2A]/55 to-transparent" />
-
-                      <div className="relative flex h-full min-h-[520px] flex-col justify-end p-7 md:p-10">
-
-                        <div className="mb-auto flex items-start justify-between">
-                          <span className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white backdrop-blur-sm">
-                            {featuredJournalStory.category}
-                          </span>
-
-                          <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm">
-                            Featured
-                          </span>
-                        </div>
-
-                        <div>
-                          <div className="mb-4 text-sm text-white/70">
-                            {featuredJournalStory.publishedAt
-                              ? new Date(
-                                featuredJournalStory.publishedAt
-                              ).toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                              })
-                              : ""}
-                          </div>
-
-                          <h3 className="max-w-3xl font-display text-3xl font-medium leading-tight text-white md:text-4xl lg:text-5xl">
-                            {featuredJournalStory.title}
-                          </h3>
-
-                          <p className="mt-5 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
-                            {featuredJournalStory.excerpt}
-                          </p>
-
-                          <div className="mt-7 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.15em] text-white">
-                            Read story
-
-                            <ArrowRight
-                              size={18}
-                              className="transition-transform duration-300 group-hover:translate-x-1"
-                            />
-                          </div>
-                        </div>
-
-                      </div>
-                    </article>
-                  </Link>
-                </motion.div>
-
-                <div className="flex flex-col gap-6 lg:col-span-5">
-
-                  {latestJournalStories.map((story, index) => (
-                    <motion.div
-                      key={story._id}
-                      initial={{ opacity: 0, x: 30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, amount: 0.15 }}
-                      transition={{
-                        duration: 0.7,
-                        delay: index * 0.12,
-                      }}
-                      className="flex-1"
-                    >
-                      <Link
-                        to={`/stories/${story.slug}`}
-                        className="group block h-full"
-                      >
-                        <article className="grid h-full min-h-[250px] overflow-hidden rounded-2xl bg-white shadow-sm transition duration-500 hover:-translate-y-1 hover:shadow-xl md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-
-
-                          <div className="relative min-h-[230px] overflow-hidden bg-[#E9E3D8]">
-
-                            {story.coverImage ? (
-                              <img
-                                src={story.coverImage}
-                                alt={story.title}
-                                className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                              />
-                            ) : (
-                              <div className="absolute inset-0 flex items-center justify-center bg-[#0D1B2A]">
-                                <span className="font-display text-4xl text-white/20">
-                                  S
-                                </span>
-                              </div>
-                            )}
-
-                          </div>
-
-
-                          {/* Content */}
-                          <div className="flex flex-col justify-between p-6 md:p-7">
-
-                            <div>
-                              <div className="mb-3 flex items-center justify-between gap-3">
-
-                                <span className="text-xs font-semibold uppercase tracking-[0.15em] text-[#7C1C2E]">
-                                  {story.category}
-                                </span>
-
-                                {story.publishedAt && (
-                                  <span className="text-xs text-[#0D1B2A]/45">
-                                    {new Date(
-                                      story.publishedAt
-                                    ).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })}
-                                  </span>
-                                )}
-
-                              </div>
-
-                              <h3 className="font-display text-2xl font-medium leading-tight text-[#0D1B2A] transition-colors duration-300 group-hover:text-[#7C1C2E]">
-                                {story.title}
-                              </h3>
-
-                              <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#0D1B2A]/65">
-                                {story.excerpt}
-                              </p>
-                            </div>
-
-
-                            <div className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#0D1B2A]">
-                              Read story
-
-                              <ArrowRight
-                                size={16}
-                                className="transition-transform duration-300 group-hover:translate-x-1"
-                              />
-                            </div>
-
-                          </div>
-
-                        </article>
-                      </Link>
-                    </motion.div>
-                  ))}
-
+                    <ArrowRight
+                      size={18}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </div>
                 </div>
 
               </div>
-            )}
+            </article>
+          </Link>
+        </motion.div>
 
-            {!journalLoading && !featuredJournalStory && (
-              <div className="rounded-2xl border border-[#0D1B2A]/10 bg-white px-8 py-16 text-center">
-                <p className="text-sm uppercase tracking-[0.2em] text-[#7C1C2E]">
-                  The Journal
-                </p>
+        <div className="flex flex-col gap-6 lg:col-span-5">
 
-                <h3 className="mt-3 font-display text-3xl text-[#0D1B2A]">
-                  Stories are coming soon.
-                </h3>
+          {latestJournalStories.map((story, index) => (
+            <motion.div
+              key={story._id}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{
+                duration: 0.7,
+                delay: index * 0.12,
+              }}
+              className="flex-1"
+            >
+              <Link
+                to={`/stories/${story.slug}`}
+                className="group block h-full"
+              >
+                <article className="grid h-full min-h-[250px] overflow-hidden rounded-2xl bg-white shadow-sm transition duration-500 hover:-translate-y-1 hover:shadow-xl md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
 
-                <p className="mx-auto mt-4 max-w-xl text-[#0D1B2A]/60">
-                  We are documenting the work, people and progress behind
-                  the Shoova restoration movement.
-                </p>
-              </div>
-            )}
+                 
+                  <div className="relative min-h-[230px] overflow-hidden bg-[#E9E3D8]">
 
-          </div>
-        </section>
+                    {story.coverImage ? (
+                      <img
+                        src={story.coverImage}
+                        alt={story.title}
+                        className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#0D1B2A]">
+                        <span className="font-display text-4xl text-white/20">
+                          S
+                        </span>
+                      </div>
+                    )}
+
+                  </div>
+
+
+                  {/* Content */}
+                  <div className="flex flex-col justify-between p-6 md:p-7">
+
+                    <div>
+                      <div className="mb-3 flex items-center justify-between gap-3">
+
+                        <span className="text-xs font-semibold uppercase tracking-[0.15em] text-[#7C1C2E]">
+                          {story.category}
+                        </span>
+
+                        {story.publishedAt && (
+                          <span className="text-xs text-[#0D1B2A]/45">
+                            {new Date(
+                              story.publishedAt
+                            ).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                        )}
+
+                      </div>
+
+                      <h3 className="font-display text-2xl font-medium leading-tight text-[#0D1B2A] transition-colors duration-300 group-hover:text-[#7C1C2E]">
+                        {story.title}
+                      </h3>
+
+                      <p className="mt-4 line-clamp-3 text-sm leading-6 text-[#0D1B2A]/65">
+                        {story.excerpt}
+                      </p>
+                    </div>
+
+
+                    <div className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#0D1B2A]">
+                      Read story
+
+                      <ArrowRight
+                        size={16}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </div>
+
+                  </div>
+
+                </article>
+              </Link>
+            </motion.div>
+          ))}
+
+        </div>
+
+      </div>
+    )}
+
+    {!journalLoading && !featuredJournalStory && (
+      <div className="rounded-2xl border border-[#0D1B2A]/10 bg-white px-8 py-16 text-center">
+        <p className="text-sm uppercase tracking-[0.2em] text-[#7C1C2E]">
+          The Journal
+        </p>
+
+        <h3 className="mt-3 font-display text-3xl text-[#0D1B2A]">
+          Stories are coming soon.
+        </h3>
+
+        <p className="mx-auto mt-4 max-w-xl text-[#0D1B2A]/60">
+          We are documenting the work, people and progress behind
+          the Shoova restoration movement.
+        </p>
+      </div>
+    )}
+
+  </div>
+</section>
         {/* LAUNCH SECTION */}
         {/* <motion.section
           initial={{ opacity: 0, y: 40 }}
@@ -842,14 +842,14 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
           </div>
         </motion.section> */}
 
-        <motion.section
+        {/* <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.9 }}
           className="relative overflow-hidden bg-black text-white py-24 md:py-32"
         >
-
+        
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-[-180px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-secondary/15 blur-[140px] rounded-full" />
             <div className="absolute bottom-[-250px] left-[-150px] w-[450px] h-[450px] bg-secondary/10 blur-[120px] rounded-full" />
@@ -858,7 +858,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
           <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
 
-
+        
             <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20">
 
               <motion.p
@@ -925,12 +925,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
 
             </motion.div>
 
-
-            {/* ========================================================= */}
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-              {/* MAIN IMAGE */}
               <motion.div
                 initial={{ opacity: 0, x: -40 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -994,9 +989,6 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                   </div>
 
                 </motion.div>
-
-
-                {/* IMAGE 03 */}
                 <motion.div
                   initial={{ opacity: 0, x: 40 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -1004,7 +996,6 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
                   transition={{ duration: 0.8, delay: 0.25 }}
                   className="relative group h-[250px] md:h-[270px] lg:h-[267px] overflow-hidden rounded-2xl border border-white/10"
                 >
-
 
                   <img
                     src="/img/IMG_shoova2.jpg"
@@ -1079,7 +1070,7 @@ export const IndexPage = ({ className, children, variant, contentKey, ...props }
             </div>
 
           </div>
-        </motion.section>
+        </motion.section> */}
         <motion.section
           variants={container}
           initial="hidden"
