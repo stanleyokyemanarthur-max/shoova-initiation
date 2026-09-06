@@ -31,11 +31,11 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
-
-  const isPathwaysActive =
-    location.pathname === "/our-story" ||
-    location.pathname === "/why-it-matters" ||
-    location.pathname === "/restoration-updates";
+const isPathwaysActive =
+  location.pathname === "/story" ||
+  location.pathname === "/shoova-campus" ||
+  location.pathname === "/why-it-matters" ||
+  location.pathname === "/restoration-updates";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -157,6 +157,9 @@ const Navbar = () => {
 
               <NavLink to="/shoovainitiatives" className={navLinkClass}>
                 Initiatives
+              </NavLink>
+              <NavLink to="/stories" className={navLinkClass}>
+                Journal
               </NavLink>
               <NavLink to="/contact" className={navLinkClass}>
                 Contact
@@ -319,6 +322,15 @@ const Navbar = () => {
               >
                 Initiatives
               </Link>
+
+              <Link
+                to="/stories"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-lg font-semibold text-gray-900"
+              >
+                Journal
+              </Link>
+
 
               <Link
                 to="/contact"
